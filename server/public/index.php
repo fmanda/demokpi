@@ -26,14 +26,6 @@ $app->get('/', function (Request $request, Response $response, $args) {
     return $response;
 });
 
-require '../src/routes/profitloss.php';
-require '../src/routes/project.php';
-require '../src/routes/salesperiod.php';
-require '../src/routes/cashflow.php';
-require '../src/routes/apaging.php';
-require '../src/routes/inventory.php';
-require '../src/routes/dashboard.php';
-require '../src/routes/araging.php';
-require '../src/routes/user.php';
+require '../src/routes/test.php';
 
 $app->run();
