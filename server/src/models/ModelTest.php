@@ -33,7 +33,6 @@
 		}
 
 		public static function saveToDB($obj){
-			$classname = get_called_class();
 			$db = new DB();
 			$db = $db->connect();
 			$db->beginTransaction();
