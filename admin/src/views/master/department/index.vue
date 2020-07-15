@@ -84,26 +84,58 @@
     </el-tabs>
 
     <el-dialog :title="dialogData.subname" :visible.sync="dialogVisible" label-position="top">
-      <el-form :model="dialogData">
-        <el-form-item label="Description">
-          <el-input
-            type="textarea"
-            autosize
-            placeholder="Please input Description"
-            v-model="dialogData.subdesc">
-          </el-input>
-        </el-form-item>
+      <el-input
+        type="textarea"
+        :autosize="{ minRows: 5, maxRows: 5}"
+        placeholder="Please input Description"
+        v-model="dialogData.subdesc">
+      </el-input>
+      <br/>
+      <el-row :gutter="10">
+        <el-col :span="8">
+          <el-input type="textarea" rows="4" placeholder="Level 1" v-model="dialogData.level_1"></el-input>
+        </el-col>
+        <el-col :span="16">
+          <el-input type="textarea" rows="4" placeholder="Uraian Level 1" v-model="dialogData.leveldetail_1"></el-input>
+        </el-col>
+      </el-row>
 
-        <el-form-item label="Level 1">
-          <el-input type="textarea" autosize placeholder="Level 1" v-model="dialogData.level_1"></el-input>
-          <el-input type="textarea" autosize placeholder="Uraian Level 1" v-model="dialogData.leveldetail_1"></el-input>
-        </el-form-item>
+      <el-row :gutter="10">
+        <el-col :span="8">
+          <el-input type="textarea" rows="4" placeholder="Level 2" v-model="dialogData.level_2"></el-input>
+        </el-col>
+        <el-col :span="16">
+          <el-input type="textarea" rows="4" placeholder="Uraian Level 2" v-model="dialogData.leveldetail_2"></el-input>
+        </el-col>
+      </el-row>
 
-        <el-form-item label="Level 2">
-          <el-input type="textarea" autosize placeholder="Level 2" v-model="dialogData.level_2"></el-input>
-        </el-form-item>
+      <el-row :gutter="10">
+        <el-col :span="8">
+          <el-input type="textarea" rows="4" placeholder="Level 3" v-model="dialogData.level_3"></el-input>
+        </el-col>
+        <el-col :span="16">
+          <el-input type="textarea" rows="4" placeholder="Uraian Level 3" v-model="dialogData.leveldetail_3"></el-input>
+        </el-col>
+      </el-row>
 
-      </el-form>
+      <el-row :gutter="10">
+        <el-col :span="8">
+          <el-input type="textarea" rows="4" placeholder="Level 4" v-model="dialogData.level_4"></el-input>
+        </el-col>
+        <el-col :span="16">
+          <el-input type="textarea" rows="4" placeholder="Uraian Level 4" v-model="dialogData.leveldetail_4"></el-input>
+        </el-col>
+      </el-row>
+
+      <el-row :gutter="10">
+        <el-col :span="8">
+          <el-input type="textarea" rows="4"  placeholder="Level 5" v-model="dialogData.level_5"></el-input>
+        </el-col>
+        <el-col :span="16">
+          <el-input type="textarea" rows="4" placeholder="Uraian Level 5" v-model="dialogData.leveldetail_5"></el-input>
+        </el-col>
+      </el-row>
+
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="dialogVisible = false">Update</el-button>
         <el-button @click="dialogVisible = false">Cancel</el-button>
@@ -190,5 +222,10 @@ export default {
 <style scoped>
   .el-input-number {
     width: 140px;
+  }
+  .el-row {
+    margin-top: 10px;
+    /* padding: 5px; */
+    /* background-color: #2cfb6954; */
   }
 </style>
