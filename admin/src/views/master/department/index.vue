@@ -120,9 +120,8 @@ export default {
       }).then(() => {
         this.postData()
       })
-
     },
-    postData(){
+    postData() {
       var vm = this;
       postDepartment(this.department).then(response => {
         vm.$message({
