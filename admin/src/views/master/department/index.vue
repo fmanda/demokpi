@@ -5,7 +5,7 @@
         <el-col :span="2">
           <el-input v-model="department.deptcode" placeholder="Dept Code" style="width: 90%;" />
         </el-col>
-        <el-col :span="5">
+        <el-col :span="10">
           <el-input v-model="department.deptname" placeholder="Department Name" />
         </el-col>
         <el-col :span="2" style="margin-left: 10px;">
@@ -46,6 +46,7 @@
                       <el-button plain type="danger" size="small" icon="el-icon-delete" @click.native.prevent="deleteRow(sc.$index, props.row.items)" />
                       <el-button plain size="small" icon="el-icon-top" @click.native.prevent="moveRow(sc.$index, props.row.items,-1) " />
                       <el-button plain size="small" icon="el-icon-bottom" @click.native.prevent="moveRow(sc.$index, props.row.items,1) " />
+                      <el-button plain type="primary" size="small" icon="el-icon-info" @click.native.prevent="showDialog(sc.$index, props.row.items)">Description</el-button>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -81,6 +82,33 @@
       </el-tab-pane>
       <el-tab-pane label="Users">Users</el-tab-pane>
     </el-tabs>
+
+    <el-dialog :title="dialogData.subname" :visible.sync="dialogVisible" label-position="top">
+      <el-form :model="dialogData">
+        <el-form-item label="Description">
+          <el-input
+            type="textarea"
+            autosize
+            placeholder="Please input Description"
+            v-model="dialogData.subdesc">
+          </el-input>
+        </el-form-item>
+
+        <el-form-item label="Level 1">
+          <el-input type="textarea" autosize placeholder="Level 1" v-model="dialogData.level_1"></el-input>
+          <el-input type="textarea" autosize placeholder="Uraian Level 1" v-model="dialogData.leveldetail_1"></el-input>
+        </el-form-item>
+
+        <el-form-item label="Level 2">
+          <el-input type="textarea" autosize placeholder="Level 2" v-model="dialogData.level_2"></el-input>
+        </el-form-item>
+
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="dialogVisible = false">Update</el-button>
+        <el-button @click="dialogVisible = false">Cancel</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -98,7 +126,9 @@ export default {
         deptname: '',
         mlitems: [],
         kpiitems: []
-      }
+      },
+      dialogData: {},
+      dialogVisible: false
     }
   },
   created() {
@@ -107,7 +137,7 @@ export default {
   methods: {
     fetchData() {
       this.listLoading = true
-      getDepartment(4).then(response => {
+      getDepartment(1).then(response => {
         this.department = response.data
         this.loading = false
       })
@@ -148,6 +178,10 @@ export default {
       items[index] = items[newindex]
       // items[newindex] = tmp
       this.$set(items, newindex, tmp)
+    },
+    showDialog(index, items) {
+      this.dialogData = items[index];
+      this.dialogVisible = true;
     }
   }
 }
@@ -155,6 +189,6 @@ export default {
 
 <style scoped>
   .el-input-number {
-      width: 140px;
+    width: 140px;
   }
 </style>
