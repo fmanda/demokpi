@@ -83,7 +83,7 @@ export const constantRoutes = [
       {
         path: 'upload',
         name: 'Upload',
-        component: () => import('@/views/form/index'),
+        component: () => import('@/views/upload/index'),
         meta: { title: 'Upload Data', icon: 'form' }
       }
     ]

@@ -7,6 +7,13 @@ export function getDepartment(deptid) {
   })
 }
 
+export function getKPIDept(deptid, year) {
+  return request({
+    url: 'kpidept/' + deptid.toString() + '/' + year.toString(),
+    method: 'get'
+  })
+}
+
 export function postDepartment(data) {
   return request({
     url: 'department',

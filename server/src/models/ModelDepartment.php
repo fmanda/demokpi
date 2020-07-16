@@ -57,7 +57,6 @@
 
 				static::saveObjToDB($obj, $db);
 
-
 				foreach($obj->mlitems as $mlarea){
 					$mlarea->department_id = $obj->id;
 					$mlarea->id = 0; //force insert
