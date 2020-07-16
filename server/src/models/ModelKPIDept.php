@@ -59,7 +59,14 @@
 				$newitem->areaname = $area->areaname;
 				$newitem->subcode = $subarea->subcode;
 				$newitem->subname = $subarea->subname;
-				$newitem->subdesc = $subarea->subname . '\n' . $subarea->subdesc;
+
+				// $newitem->subdesc = $subarea->subname.  "\n\n" . $subarea->subdesc;
+				if ($i == 1) {
+					$newitem->subdesc = $subarea->subname;
+				}else{
+					$newitem->subdesc = $subarea->subdesc;
+				}
+				
 				$newitem->weight = $subarea->weight;
 
 				if ($i == 1){

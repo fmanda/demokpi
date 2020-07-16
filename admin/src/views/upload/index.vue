@@ -6,8 +6,8 @@
         <el-table v-loading="listLoading" :data="kpidept.mlitems" style="width: 100%" :span-method="onSpanMethod">
           <el-table-column width="150" header-align="center" prop="areaname" label="Area"></el-table-column>
           <el-table-column label="Sub Area" header-align="center">
-            <el-table-column width="50" header-align="center" prop="subcode" label="Code"></el-table-column>
-            <el-table-column width="180" header-align="center" prop="subdesc" label="Sub Name"></el-table-column>
+            <el-table-column width="70" header-align="center" prop="subcode" label="No"></el-table-column>
+            <el-table-column width="250" header-align="center" prop="subdesc" label="Sub Name"></el-table-column>
           </el-table-column>
           <el-table-column width="180" header-align="center" prop="level" label="Name"></el-table-column>
           <el-table-column header-align="center" prop="leveldetail" label="Uraian"></el-table-column>
@@ -37,7 +37,7 @@ export default {
       optionSpan: [
         { index: 0, field: 'areaname' },
         { index: 1, field: 'subcode' },
-        { index: 2, field: 'subname' }
+        { index: 2, field: 'subdesc' }
       ]
     }
   },
@@ -67,9 +67,11 @@ export default {
     word-break: break-word; */
   }
   .el-table >>> .cell {
-    word-break: normal;
+    word-break: break-word;
+    white-space: pre-wrap;
+    /* word-break: normal;
     line-height: 15px;
-    font-size: 12px;
+    font-size: 12px; */
     /* white-space: pre; */
     /* text-overflow: clip; */
     /* overflow-wrap: break-word; */
