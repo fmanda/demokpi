@@ -11,7 +11,14 @@
           </el-table-column>
           <el-table-column width="180" header-align="center" prop="level" label="Name"></el-table-column>
           <el-table-column header-align="center" prop="leveldetail" label="Uraian"></el-table-column>
-          <el-table-column width="180" label="Operations" header-align="center"></el-table-column>
+          <el-table-column width="180" label="Operations" header-align="center">
+            <template slot-scope="sc">
+              <el-button type="primary" @click.native.prevent="showDialog(sc.$index, kpidept.mlitems)">
+                <i class="el-icon-upload el-icon-right"></i>  Upload
+                {{sc.row.key}}
+              </el-button>
+            </template>
+          </el-table-column>
 
         </el-table>
       </el-tab-pane>
@@ -19,6 +26,21 @@
         <span slot="label"><i class="el-icon-s-opportunity" />KPI</span>
       </el-tab-pane>
     </el-tabs>
+
+    <el-dialog :title="dialogData.caption" :visible.sync="dialogVisible" label-position="top">
+      <el-upload
+        class="upload-demo"
+        action="https://jsonplaceholder.typicode.com/posts/"
+        multiple
+        :file-list="fileList">
+        <el-button type="primary">Click to upload</el-button>
+      </el-upload>
+
+      <!-- <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="dialogVisible = false">Upload</el-button>
+        <el-button @click="dialogVisible = false">Cancel</el-button>
+      </span> -->
+    </el-dialog>
   </div>
 </template>
 
@@ -38,7 +60,10 @@ export default {
         { index: 0, field: 'areaname' },
         { index: 1, field: 'subcode' },
         { index: 2, field: 'subdesc' }
-      ]
+      ],
+      dialogData: {},
+      dialogVisible: false,
+      fileList: []
     }
   },
   created() {
@@ -54,6 +79,10 @@ export default {
     },
     onSpanMethod({ row, column, rowIndex, columnIndex }) {
       return spanRow({ row, column, rowIndex, columnIndex }, this.kpidept.mlitems, this.optionSpan)
+    },
+    showDialog(index, items) {
+      this.dialogData.caption = 'Upload Evident : ' + items[index].subname;
+      this.dialogVisible = true;
     }
 
   }
