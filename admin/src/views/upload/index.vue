@@ -37,11 +37,15 @@
     <el-dialog :title="dialogData.caption" :visible.sync="dialogVisible" label-position="top">
       <el-upload
         class="upload-demo"
-        action="https://jsonplaceholder.typicode.com/posts/"
+        ref="upload"
+        :action="getRestUploadURL()"
+        :on-error="handleUploadError"
         multiple
         :file-list="fileList"
+        :auto-upload="false"
       >
-        <el-button type="primary">Click to upload</el-button>
+        <el-button slot="trigger" size="small" type="primary">select file</el-button>
+        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">upload to server</el-button>
       </el-upload>
 
       <!-- <span slot="footer" class="dialog-footer">
@@ -55,6 +59,8 @@
 <script>
 import { getKPIDept } from '@/api/department'
 import { spanRow } from '@/utils/spanRow'
+import { getUploadURL } from '@/api/kpidept'
+import { Message } from 'element-ui'
 
 export default {
   data() {
@@ -92,15 +98,15 @@ export default {
       this.dialogVisible = true;
     },
     cellStyle({ row, column, rowIndex, columnIndex }) {
-      if (row.level === 0) {
+      if (columnIndex === 0) {
         return 'font-weight: bold; color: rgb(64, 158, 255);'
       }
       if (row.level === 1 && columnIndex === 2) {
         return 'font-weight: bold; color: rgb(64, 158, 255);'
       }
-      // if (columnIndex === 3) {
-      //   return 'color: rgb(64, 158, 255);'
-      // }
+      if (columnIndex === 3) {
+        return 'color: rgb(64, 158, 255);'
+      }
       if (columnIndex === 1) {
         return 'font-weight: bold; color: rgb(64, 158, 255);'
       }
@@ -112,14 +118,28 @@ export default {
       // }
 
       // if ([4,5].includes(columnIndex)){
-      if (columnIndex === 3) {
-        if (row.level === 1) return 'color:#CC0033;';
-        if (row.level === 2) return 'color:#993300;';
-        if (row.level === 3) return 'color:#FF3300;';
-        if (row.level === 4) return 'color:#0000FF;';
-        if (row.level === 5) return 'color:#006600;';
-      }
+      // if (columnIndex === 3) {
+      //   if (row.level === 1) return 'color:#CC0033;';
+      //   if (row.level === 2) return 'color:#993300;';
+      //   if (row.level === 3) return 'color:#FF3300;';
+      //   if (row.level === 4) return 'color:#0000FF;';
+      //   if (row.level === 5) return 'color:#006600;';
+      // }
 
+    },
+    submitUpload() {
+      this.$refs.upload.submit();
+    },
+    getRestUploadURL() {
+      return getUploadURL();
+    },
+    handleUploadError(err, file, fileList){
+      console.log(err);
+      Message({
+        message: 'Error Upload File, Cek console untuk detail',
+        type: 'error',
+        duration: 5 * 1000
+      })
     }
 
   }
