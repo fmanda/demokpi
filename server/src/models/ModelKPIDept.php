@@ -66,29 +66,30 @@
 				}else{
 					$newitem->subdesc = $subarea->subdesc;
 				}
-				
+
 				$newitem->weight = $subarea->weight;
 
 				if ($i == 1){
-					$newitem->level = $subarea->level_1;
+					$newitem->levelcode = $subarea->level_1;
 					$newitem->leveldetail = $subarea->leveldetail_1;
 				}
 				else if ($i == 2){
-					$newitem->level = $subarea->level_2;
+					$newitem->levelcode = $subarea->level_2;
 					$newitem->leveldetail = $subarea->leveldetail_2;
 				}
 				else if ($i == 3) {
-					$newitem->level = $subarea->level_3;
+					$newitem->levelcode = $subarea->level_3;
 					$newitem->leveldetail = $subarea->leveldetail_3;
 				}
 				else if ($i == 4){
-					$newitem->level = $subarea->level_4;
+					$newitem->levelcode = $subarea->level_4;
 					$newitem->leveldetail = $subarea->leveldetail_4;
 				}
 				else if ($i == 5){
-					$newitem->level = $subarea->level_5;
+					$newitem->levelcode = $subarea->level_5;
 					$newitem->leveldetail = $subarea->leveldetail_5;
 				}
+				$newitem->level = $i;
 
 				$newitem->key = $newitem->subcode . '_' . $i;
 				array_push($items, $newitem);
@@ -147,6 +148,7 @@
 				"level_3", "leveldetail_3",
 				"level_4", "leveldetail_4",
 				"level_5", "leveldetail_5",
+
 			);
 		}
 	}

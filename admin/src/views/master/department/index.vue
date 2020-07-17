@@ -85,54 +85,54 @@
 
     <el-dialog :title="dialogData.subname" :visible.sync="dialogVisible" label-position="top">
       <el-input
+        v-model="dialogData.subdesc"
         type="textarea"
         :autosize="{ minRows: 5, maxRows: 5}"
         placeholder="Please input Description"
-        v-model="dialogData.subdesc">
-      </el-input>
-      <br/>
+      />
+      <br>
       <el-row :gutter="10">
         <el-col :span="8">
-          <el-input type="textarea" rows="4" placeholder="Level 1" v-model="dialogData.level_1"></el-input>
+          <el-input v-model="dialogData.level_1" type="textarea" rows="4" placeholder="Level 1" />
         </el-col>
         <el-col :span="16">
-          <el-input type="textarea" rows="4" placeholder="Uraian Level 1" v-model="dialogData.leveldetail_1"></el-input>
+          <el-input v-model="dialogData.leveldetail_1" type="textarea" rows="4" placeholder="Uraian Level 1" />
         </el-col>
       </el-row>
 
       <el-row :gutter="10">
         <el-col :span="8">
-          <el-input type="textarea" rows="4" placeholder="Level 2" v-model="dialogData.level_2"></el-input>
+          <el-input v-model="dialogData.level_2" type="textarea" rows="4" placeholder="Level 2" />
         </el-col>
         <el-col :span="16">
-          <el-input type="textarea" rows="4" placeholder="Uraian Level 2" v-model="dialogData.leveldetail_2"></el-input>
+          <el-input v-model="dialogData.leveldetail_2" type="textarea" rows="4" placeholder="Uraian Level 2" />
         </el-col>
       </el-row>
 
       <el-row :gutter="10">
         <el-col :span="8">
-          <el-input type="textarea" rows="4" placeholder="Level 3" v-model="dialogData.level_3"></el-input>
+          <el-input v-model="dialogData.level_3" type="textarea" rows="4" placeholder="Level 3" />
         </el-col>
         <el-col :span="16">
-          <el-input type="textarea" rows="4" placeholder="Uraian Level 3" v-model="dialogData.leveldetail_3"></el-input>
+          <el-input v-model="dialogData.leveldetail_3" type="textarea" rows="4" placeholder="Uraian Level 3" />
         </el-col>
       </el-row>
 
       <el-row :gutter="10">
         <el-col :span="8">
-          <el-input type="textarea" rows="4" placeholder="Level 4" v-model="dialogData.level_4"></el-input>
+          <el-input v-model="dialogData.level_4" type="textarea" rows="4" placeholder="Level 4" />
         </el-col>
         <el-col :span="16">
-          <el-input type="textarea" rows="4" placeholder="Uraian Level 4" v-model="dialogData.leveldetail_4"></el-input>
+          <el-input v-model="dialogData.leveldetail_4" type="textarea" rows="4" placeholder="Uraian Level 4" />
         </el-col>
       </el-row>
 
       <el-row :gutter="10">
         <el-col :span="8">
-          <el-input type="textarea" rows="4"  placeholder="Level 5" v-model="dialogData.level_5"></el-input>
+          <el-input v-model="dialogData.level_5" type="textarea" rows="4" placeholder="Level 5" />
         </el-col>
         <el-col :span="16">
-          <el-input type="textarea" rows="4" placeholder="Uraian Level 5" v-model="dialogData.leveldetail_5"></el-input>
+          <el-input v-model="dialogData.leveldetail_5" type="textarea" rows="4" placeholder="Uraian Level 5" />
         </el-col>
       </el-row>
 
