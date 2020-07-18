@@ -71,7 +71,7 @@ export const constantRoutes = [
         path: 'users',
         name: 'Users',
         component: () => import('@/views/master/users'),
-        meta: { title: 'Users', icon: 'link' }
+        meta: { title: 'Users', icon: 'user' }
       }
     ]
   },
@@ -88,6 +88,20 @@ export const constantRoutes = [
       }
     ]
   },
+
+  {
+    path: '/directory',
+    component: Layout,
+    children: [
+      {
+        path: 'directory',
+        name: 'Directory',
+        component: () => import('@/views/directory/index'),
+        meta: { title: 'Directory', icon: 'form' }
+      }
+    ]
+  },
+
 
   {
     path: '/assement',

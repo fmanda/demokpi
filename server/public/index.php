@@ -29,5 +29,7 @@ $app->get('/', function (Request $request, Response $response, $args) {
 require '../src/routes/test.php';
 require '../src/routes/department.php';
 require '../src/routes/kpidept.php';
+require '../src/routes/directory.php';
+require '../src/routes/users.php';
 
 $app->run();
