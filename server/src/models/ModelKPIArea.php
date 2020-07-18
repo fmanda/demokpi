@@ -3,7 +3,7 @@
 
 	class ModelKPIArea extends BaseModel{
 		public static function getTableName(){
-			return 'KPI_Area';
+			return 'kpi_area';
 		}
 
 		public static function getFields(){
@@ -15,7 +15,7 @@
 
 	class ModelKPISubArea extends BaseModel{
 		public static function getTableName(){
-			return 'KPI_SubArea';
+			return 'kpi_subarea';
 		}
 		public static function getFields(){
 			return array(

@@ -57,3 +57,15 @@ $app->post('/users', function ($request, $response) {
 	}
 
 });
+
+$app->get('/users_delete/{id}', function ($request, $response) {  //if hosting not allowed del
+  try{
+    $data = ModelUsers::deleteFromDB($request->getAttribute('id'));
+		return $response->withHeader('Content-Type', 'application/json;charset=utf-8');
+	}catch(Exception $e){
+    $msg = $e->getMessage();
+    $response->getBody()->write($msg);
+		return $response->withStatus(500)
+			->withHeader('Content-Type', 'text/html');
+	}
+});

@@ -6,3 +6,25 @@ export function getUsers() {
     method: 'get'
   })
 }
+
+export function getUser(id) {
+  return request({
+    url: 'users/' + id.toString(),
+    method: 'get'
+  })
+}
+
+export function delUser(id) {
+  return request({
+    url: 'users_delete/' + id.toString(),
+    method: 'get'
+  })
+}
+
+export function postUser(data) {
+  return request({
+    url: 'users',
+    method: 'post',
+    data
+  })
+}

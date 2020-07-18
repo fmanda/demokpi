@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vue-cli-service serve --port 8080",
     "watch": "vue-cli-service build --watch",
-    "compile": "vue-cli-service lint --fix",
+    "fix": "vue-cli-service lint --fix",
     "build:prod": "vue-cli-service build",
     "build:stage": "vue-cli-service build --mode staging",
     "preview": "node build/index.js --preview",

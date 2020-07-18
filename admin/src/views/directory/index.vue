@@ -3,20 +3,20 @@
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <el-input
+          v-model="filterText"
           placeholder="Search File / Directory"
-          v-model="filterText">
-        </el-input>
+        />
       </div>
       <span>Directory List :</span>
-      <p></p>
+      <p />
       <el-tree
+        ref="tree"
         class="filter-tree"
         :data="data"
         :props="defaultProps"
         :filter-node-method="filterNode"
         icon-class="el-icon-caret-right"
-        ref="tree">
-      </el-tree>
+      />
     </el-card>
   </div>
 </template>
@@ -25,11 +25,6 @@
 import { getDirectory } from '@/api/directory'
 
 export default {
-  watch: {
-    filterText(val) {
-      this.$refs.tree.filter(val);
-    }
-  },
   data() {
     return {
       filterText: '',
@@ -39,6 +34,11 @@ export default {
         children: 'items',
         label: 'fileName'
       }
+    }
+  },
+  watch: {
+    filterText(val) {
+      this.$refs.tree.filter(val);
     }
   },
   created() {

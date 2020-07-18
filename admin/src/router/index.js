@@ -64,9 +64,19 @@ export const constantRoutes = [
       {
         path: 'department',
         name: 'Department',
-        component: () => import('@/views/master/department'),
+        component: () => import('@/views/master/department/index'),
         meta: { title: 'Department', icon: 'link' }
       },
+
+      {
+        props: true,
+        path: 'update_department',
+        name: 'update_department',
+        component: () => import('@/views/master/department/update'),
+        meta: { title: 'Update Department', icon: 'link' },
+        hidden: true
+      },
+
       {
         path: 'users',
         name: 'Users',
@@ -101,8 +111,18 @@ export const constantRoutes = [
       }
     ]
   },
-
-
+  {
+    path: '/uploadlog',
+    component: Layout,
+    children: [
+      {
+        path: 'uploadlog',
+        name: 'uploadlog',
+        component: () => import('@/views/upload/log'),
+        meta: { title: 'Log Upload', icon: 'form' }
+      }
+    ]
+  },
   {
     path: '/assement',
     component: Layout,
@@ -110,12 +130,11 @@ export const constantRoutes = [
       {
         path: 'assement',
         name: 'Assement',
-        component: () => import('@/views/form/index'),
+        component: () => import('@/views/assesment/index'),
         meta: { title: 'Assement', icon: 'form' }
       }
     ]
   },
-
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]

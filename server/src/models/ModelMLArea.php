@@ -3,7 +3,7 @@
 
 	class ModelMLArea extends BaseModel{
 		public static function getTableName(){
-			return 'ML_Area';
+			return 'ml_area';
 		}
 
 		public static function getFields(){
@@ -15,7 +15,7 @@
 
 	class ModelMLSubArea extends BaseModel{
 		public static function getTableName(){
-			return 'ML_SubArea';
+			return 'ml_subarea';
 		}
 		public static function getFields(){
 			return array(

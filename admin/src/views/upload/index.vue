@@ -1,5 +1,33 @@
 <template>
   <div class="app-container">
+    <el-form ref="form" :model="dialogData" label-width="120px" label-position="top">
+      <el-form-item label="">
+        <el-col :span="2">
+          <el-select v-model="param_year" placeholder="Select Year" style="width:100%">
+            <el-option
+              v-for="year in years"
+              :key="year.id"
+              :label="year.id"
+              :value="year.id"
+            />
+          </el-select>
+        </el-col>
+        <el-col :span="22">
+          <el-select v-model="param_department_id" placeholder="Select Department" style="width:100%; margin-left:10px">
+            <el-option
+              v-for="dept in depts"
+              :key="dept.id"
+              :label="dept.deptname"
+              :value="dept.id"
+            >
+              <span style="float: left">{{ dept.deptname }}</span>
+              <span style="float: right; color: #8492a6; font-size: 13px">{{ dept.deptcode }}</span>
+            </el-option>
+          </el-select>
+        </el-col>
+      </el-form-item>
+    </el-form>
+
     <el-tabs type="border-card">
       <el-tab-pane>
         <span slot="label"><i class="el-icon-s-opportunity" />Maturity Level</span>
@@ -26,18 +54,41 @@
               </el-button>
             </template>
           </el-table-column>
-
         </el-table>
       </el-tab-pane>
       <el-tab-pane>
         <span slot="label"><i class="el-icon-s-opportunity" />KPI</span>
+        <el-table
+          v-loading="listLoading"
+          :data="kpidept.kpiitems"
+          :cell-style="cellStyle"
+          style="width: 100%"
+          :span-method="onSpanMethod"
+        >
+          <el-table-column width="150" header-align="center" prop="areaname" label="Area" />
+          <el-table-column label="Sub Area" header-align="center">
+            <el-table-column width="70" header-align="center" prop="subcode" label="No" />
+            <el-table-column width="250" header-align="center" prop="subdesc" label="Sub Name" />
+          </el-table-column>
+          <el-table-column width="180" header-align="center" prop="levelcode" label="Level" />
+          <el-table-column header-align="center" prop="leveldetail" label="Uraian" />
+          <el-table-column width="70" header-align="center" prop="weight" label="Bobot" />
+          <el-table-column width="100" label="Operations" header-align="center">
+            <template slot-scope="sc">
+              <el-button type="text" @click.native.prevent="showDialog(sc.$index, kpidept.kpiitems)">
+                <i class="el-icon-upload2" />  Upload
+                <!-- {{sc.row.key}} -->
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
       </el-tab-pane>
     </el-tabs>
 
     <el-dialog :title="dialogData.caption" :visible.sync="dialogVisible" label-position="top">
       <el-upload
-        class="upload-demo"
         ref="upload"
+        class="upload-demo"
         :action="getRestUploadURL()"
         :on-error="handleUploadError"
         multiple
@@ -57,7 +108,7 @@
 </template>
 
 <script>
-import { getKPIDept } from '@/api/department'
+import { getKPIDept, getListDept } from '@/api/department'
 import { spanRow } from '@/utils/spanRow'
 import { getUploadURL } from '@/api/kpidept'
 import { Message } from 'element-ui'
@@ -65,10 +116,16 @@ import { Message } from 'element-ui'
 export default {
   data() {
     return {
+      param_year: null,
+      param_department_id: null,
+      param_deptcode: null,
+      param_subcode: null,
+      years: [{ id: 2020 }, { id: 2021 }, { id: 2022 }, { id: 2023 }, { id: 2024 }],
       kpidept: {
         mlitems: [],
         kpiitems: []
       },
+      depts: [],
       optionSpan: [
         { index: 0, field: 'areaname' },
         { index: 1, field: 'subcode' },
@@ -79,15 +136,39 @@ export default {
       fileList: []
     }
   },
+  watch: {
+    param_year(val) {
+      this.fetchData();
+    },
+    param_department_id(val) {
+      this.fetchData();
+    }
+  },
   created() {
+    this.fetchDepts()
     this.fetchData();
   },
   methods: {
+    fetchDepts() {
+      getListDept().then(response => {
+        this.depts = response.data;
+      })
+    },
     fetchData() {
       this.listLoading = true
-      getKPIDept(1, 2020).then(response => {
-        this.kpidept = response.data
-        this.listLoading = false
+      var deptid = 0;
+      var year = 0;
+      if (this.param_department_id) deptid = this.param_department_id;
+      if (this.param_year) year = this.param_year;
+
+      if (year === 0 || deptid === 0) {
+        this.listLoading = false;
+        return;
+      }
+
+      getKPIDept(deptid, year).then(response => {
+        this.kpidept = response.data;
+        this.listLoading = false;
       })
     },
     onSpanMethod({ row, column, rowIndex, columnIndex }) {
@@ -95,6 +176,11 @@ export default {
     },
     showDialog(index, items) {
       this.dialogData.caption = 'Upload Evident : ' + items[index].subname;
+      this.param_subcode = items[index].subcode;
+      this.param_deptcode = this.kpidept.deptcode;
+      if (!this.param_year) return;
+      if (!this.param_deptcode) return;
+      if (!this.param_subcode) return;
       this.dialogVisible = true;
     },
     cellStyle({ row, column, rowIndex, columnIndex }) {
@@ -110,7 +196,7 @@ export default {
       if (columnIndex === 1) {
         return 'font-weight: bold; color: rgb(64, 158, 255);'
       }
-      if (row.level > 1 && columnIndex === 2){
+      if (row.level > 1 && columnIndex === 2) {
         return 'font-size: 13px';
       }
       // if (columnIndex === 4) {
@@ -125,15 +211,21 @@ export default {
       //   if (row.level === 4) return 'color:#0000FF;';
       //   if (row.level === 5) return 'color:#006600;';
       // }
-
     },
     submitUpload() {
       this.$refs.upload.submit();
+      this.dialogVisible = false;
+      this.$message({
+        type: 'success',
+        message: 'Data Berhasil Diupload'
+      });
     },
     getRestUploadURL() {
-      return getUploadURL();
+      var url = getUploadURL(this.param_year, this.param_deptcode, this.param_subcode);
+      // console.log(url);
+      return url;
     },
-    handleUploadError(err, file, fileList){
+    handleUploadError(err, file, fileList) {
       console.log(err);
       Message({
         message: 'Error Upload File, Cek console untuk detail',

@@ -1,14 +1,14 @@
 <?php
 	require_once '../src/models/BaseModel.php';
 
-	class ModelUsers extends BaseModel{
+	class ModelUploadLog extends BaseModel{
 		public static function getTableName(){
-			return 'users';
+			return 'upload_log';
 		}
 		public static function getFields(){
 			return array(
-				"username", "password",
-				"fullname", "department_id",
+				"id", "user_id", "filename", "directory", "yearperiod", "department_id",
+				"ml_subarea", "kpi_subarea", "level_id"
 			);
 		}
 

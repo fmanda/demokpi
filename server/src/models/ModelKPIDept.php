@@ -133,7 +133,7 @@
 
 	class ModelKPIDeptDetail extends BaseModel{
 		public static function getTableName(){
-			return 'KPIDeptDetail';
+			return 'kpideptdetail';
 		}
 		public static function getFields(){
 			return array(

@@ -26,7 +26,6 @@
 			return $obj;
 		}
 
-
 		public static function deleteFromDB($id){
 			try{
 				$obj = parent::retrieve($id);
