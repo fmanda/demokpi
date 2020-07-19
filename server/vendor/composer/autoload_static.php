@@ -8,8 +8,8 @@ class ComposerStaticInit963113c1bcc1bbec4d4808358de346a6
 {
     public static $files = array (
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
-        'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
         '7e9bd612cc444b3eed788ebbe46263a0' => __DIR__ . '/..' . '/laminas/laminas-zendframework-bridge/src/autoload.php',
+        'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
         '07d7f1a47144818725fd8d91a907ac57' => __DIR__ . '/..' . '/laminas/laminas-diactoros/src/functions/create_uploaded_file.php',
         'da94ac5d3ca7d2dbab84ce561ce72bfd' => __DIR__ . '/..' . '/laminas/laminas-diactoros/src/functions/marshal_headers_from_sapi.php',
         '3d97c8dcdfba8cb85d3b34f116bb248b' => __DIR__ . '/..' . '/laminas/laminas-diactoros/src/functions/marshal_method_from_sapi.php',
@@ -33,6 +33,7 @@ class ComposerStaticInit963113c1bcc1bbec4d4808358de346a6
         'S' => 
         array (
             'Slim\\Psr7\\' => 10,
+            'Slim\\Http\\' => 10,
             'Slim\\' => 5,
         ),
         'P' => 
@@ -72,6 +73,10 @@ class ComposerStaticInit963113c1bcc1bbec4d4808358de346a6
         'Slim\\Psr7\\' => 
         array (
             0 => __DIR__ . '/..' . '/slim/psr7/src',
+        ),
+        'Slim\\Http\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/slim/http/src',
         ),
         'Slim\\' => 
         array (
