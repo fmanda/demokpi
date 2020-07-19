@@ -39,6 +39,47 @@ $app->post('/kpidept_upload_ml/{yearperiod}/{deptid}/{subcode}/{level}', functio
 	}
 });
 
+$app->get('/filelistml/{yearperiod}/{deptid}/{subcode}/{level}', function(Request $request, Response $response) {
+	try{
+		$str = 'select id, filename , filepath ' // concat('http://127.0.0.1/file/' , id) as link_id
+				.' from upload_log '
+				.' where yearperiod = '. $request->getAttribute('yearperiod')
+				.' and department_id = '. $request->getAttribute('deptid')
+				.' and ml_subarea = '. "'" . $request->getAttribute('subcode') . "'"
+				.' and level_id = '. $request->getAttribute('level');
+
+    $data = DB::openQuery($str);
+    $json = json_encode($data);
+    $response->getBody()->write($json);
+		return $response->withHeader('Content-Type', 'application/json;charset=utf-8');
+	}catch(Exception $e){
+		$msg = $e->getMessage();
+		$response->getBody()->write($msg . ' directory ' . $directory);
+		return $response->withStatus(500)
+			->withHeader('Content-Type', 'text/html');
+	}
+});
+
+$app->get('/filelistkpi/{yearperiod}/{deptid}/{subcode}/{level}', function(Request $request, Response $response) {
+	try{
+		$str = 'select id, filename , filepath ' // concat('http://127.0.0.1/file/' , id) as link_id
+				.' from upload_log '
+				.' where yearperiod = '. $request->getAttribute('yearperiod')
+				.' and department_id = '. $request->getAttribute('deptid')
+				.' and kpi_subarea = '. "'" . $request->getAttribute('subcode') . "'"
+				.' and level_id = '. $request->getAttribute('level');
+
+    $data = DB::openQuery($str);
+    $json = json_encode($data);
+    $response->getBody()->write($json);
+		return $response->withHeader('Content-Type', 'application/json;charset=utf-8');
+	}catch(Exception $e){
+		$msg = $e->getMessage();
+		$response->getBody()->write($msg . ' directory ' . $directory);
+		return $response->withStatus(500)
+			->withHeader('Content-Type', 'text/html');
+	}
+});
 
 $app->post('/kpidept_upload_kpi/{yearperiod}/{deptid}/{subcode}/{level}', function(Request $request, Response $response) {
 	try{
@@ -51,7 +92,7 @@ $app->post('/kpidept_upload_kpi/{yearperiod}/{deptid}/{subcode}/{level}', functi
 	}
 });
 
-function executeUploadFile(Request &$request, Response &$repsonse, $isKPI){
+function executeUploadFile($request, $response, $isKPI){
 	$config = parse_ini_file("../src/config.ini");
 	$directory =  $config["upload_directory"];
 
@@ -92,6 +133,8 @@ function executeUploadFile(Request &$request, Response &$repsonse, $isKPI){
 			ModelUploadLog::saveToDB($obj);
 		}
 	}
+
+	return $response;
 }
 
 

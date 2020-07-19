@@ -7,9 +7,8 @@ export function getUploadURLKPI(yearperiod, deptid, subcode, level) {
   if (!level) return '';
   return process.env.VUE_APP_BASE_URL + '/kpidept_upload_kpi/' +
     yearperiod.toString() + '/' +
-    deptid + '/' + subcode + '/' + level.toString();;
+    deptid + '/' + subcode + '/' + level.toString();
 }
-
 
 export function getUploadURLML(yearperiod, deptid, subcode, level) {
   if (!yearperiod) return '';
@@ -18,7 +17,7 @@ export function getUploadURLML(yearperiod, deptid, subcode, level) {
   if (!level) return '';
   return process.env.VUE_APP_BASE_URL + '/kpidept_upload_ml/' +
     yearperiod.toString() + '/' +
-    deptid + '/' + subcode  + '/' + level.toString();;
+    deptid + '/' + subcode + '/' + level.toString();
 }
 
 export function getUploadLog() {
@@ -26,4 +25,25 @@ export function getUploadLog() {
     url: 'uploadlog',
     method: 'get'
   })
+}
+
+export function getFileListML(yearperiod, deptid, subcode, level) {
+  return request({
+    url: 'filelistml/' + yearperiod.toString() + '/' +
+      deptid + '/' + subcode + '/' + level.toString(),
+    method: 'get'
+  })
+}
+
+export function getFileListKPI(yearperiod, deptid, subcode, level) {
+  return request({
+    url: 'filelistml/' + yearperiod.toString() + '/' +
+      deptid + '/' + subcode + '/' + level.toString(),
+    method: 'get'
+  })
+}
+
+export function downloadFile(id) {
+  var url = process.env.VUE_APP_BASE_URL + '/downloadfile/' + id.toString();
+  window.open(url, '_blank');
 }

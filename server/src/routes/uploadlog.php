@@ -4,7 +4,8 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 require '../vendor/autoload.php';
 require_once '../src/classes/DB.php';
-require_once '../src/models/ModelUsers.php';
+require_once '../src/models/ModelUploadLog.php';
+
 use GuzzleHttp\Psr7\LazyOpenStream;
 
 $app->get('/uploadlog', function ($request, $response) {
@@ -30,6 +31,39 @@ $app->get('/uploadlog', function ($request, $response) {
 });
 
 //
+
+
+$app->get('/downloadfile/{id}', function ($request, $response) {
+  try{
+    $id = $request->getAttribute('id');
+    $obj = ModelUploadLog::retrieve($id);
+    $file = $obj->filepath;    
+    // $file = 'upload/2020/L3/L3_17/rainbow_six_siege_outbreak_4k_8k-wide.jpg';
+    $newStream = new LazyOpenStream($file, 'r');
+    return $response->withStatus(200)
+      ->withHeader('Content-Type', 'application/force-download')
+      ->withHeader('Content-Type', 'application/octet-stream')
+      ->withHeader('Content-Type', 'application/download')
+      ->withHeader('Content-Description', 'File Transfer')
+      ->withHeader('Content-Transfer-Encoding', 'binary')
+      ->withHeader('Content-Disposition', 'attachment; filename="' . basename($file) . '"')
+      ->withHeader('Expires', '0')
+      ->withHeader('Content-Length', filesize($file))
+      ->withHeader('Cache-Control', 'must-revalidate')
+      ->withHeader('Pragma', 'public')
+      ->withBody($newStream);
+    // return $response;
+  }catch(Exception $e){
+    $msg = $e->getMessage();
+    $response->getBody()->write($msg);
+    return $response->withStatus(500)
+      ->withHeader('Content-Type', 'text/html');
+  }
+
+});
+
+
+
 $app->get('/testimage', function ($request, $response) {
   try{
     // $file = 'upload\2020\L3\L3_17\rainbow_six_siege_outbreak_4k_8k-wide.jpg';

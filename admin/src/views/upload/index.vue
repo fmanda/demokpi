@@ -46,12 +46,13 @@
           <el-table-column width="180" header-align="center" prop="levelcode" label="Level" />
           <el-table-column header-align="center" prop="leveldetail" label="Uraian" />
           <el-table-column width="70" header-align="center" prop="weight" label="Bobot" />
-          <el-table-column width="100" label="Operations" header-align="center">
+
+          <el-table-column width="110" label="Operations" header-align="center">
             <template slot-scope="sc">
-              <el-button type="text" @click.native.prevent="showDialog(sc.$index, kpidept.mlitems, false)">
-                <i class="el-icon-upload2" />  Upload
-                <!-- {{sc.row.key}} -->
-              </el-button>
+              <el-button-group>
+                <el-button type="success" size="small" icon="el-icon-upload2" @click.native.prevent="showDialog(sc.$index, kpidept.mlitems, false)" />
+                <el-button type="primary" size="small" icon="el-icon-folder-opened" @click.native.prevent="showOpenDlg(sc.$index, kpidept.mlitems, false)" />
+              </el-button-group>
             </template>
           </el-table-column>
         </el-table>
@@ -73,12 +74,12 @@
           <el-table-column width="180" header-align="center" prop="levelcode" label="Level" />
           <el-table-column header-align="center" prop="leveldetail" label="Uraian" />
           <el-table-column width="70" header-align="center" prop="weight" label="Bobot" />
-          <el-table-column width="100" label="Operations" header-align="center">
+          <el-table-column width="110" label="Operations" header-align="center">
             <template slot-scope="sc">
-              <el-button type="text" @click.native.prevent="showDialog(sc.$index, kpidept.kpiitems, true)">
-                <i class="el-icon-upload2" />  Upload
-                <!-- {{sc.row.key}} -->
-              </el-button>
+              <el-button-group>
+                <el-button type="success" size="small" icon="el-icon-upload2" @click.native.prevent="showDialog(sc.$index, kpidept.kpiitems, false)" />
+                <el-button type="primary" size="small" icon="el-icon-folder-opened" @click.native.prevent="showOpenDlg(sc.$index, kpidept.kpiitems, false)" />
+              </el-button-group>
             </template>
           </el-table-column>
         </el-table>
@@ -100,10 +101,31 @@
         <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">upload to server</el-button>
       </el-upload>
 
-      <!-- <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="dialogVisible = false">Upload</el-button>
-        <el-button @click="dialogVisible = false">Cancel</el-button>
-      </span> -->
+      <br>
+      <p>Uploaded File : </p>
+      <el-table :data="dbFileList">
+        <el-table-column width="500" header-align="center" prop="filename" label="FileName" />
+        <el-table-column width="100" label="Operations" header-align="center">
+          <template slot-scope="sc">
+            <el-button type="text" size="small" @click.native.prevent="download(sc.row.id)">
+              <i class="el-icon-download" />  Download
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-dialog>
+
+    <el-dialog :title="dialogData.caption" :visible.sync="dialogOpenVisible" label-position="top">
+      <el-table :data="dbFileList">
+        <el-table-column width="500" header-align="center" prop="filename" label="FileName" />
+        <el-table-column width="100" label="Operations" header-align="center">
+          <template slot-scope="sc">
+            <el-button type="text" size="small" @click.native.prevent="download(sc.row.id)">
+              <i class="el-icon-download" />  Download
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
     </el-dialog>
   </div>
 </template>
@@ -111,7 +133,7 @@
 <script>
 import { getKPIDept, getListDept } from '@/api/department'
 import { spanRow } from '@/utils/spanRow'
-import { getUploadURLML, getUploadURLKPI } from '@/api/kpidept'
+import { getUploadURLML, getUploadURLKPI, getFileListML, getFileListKPI, downloadFile } from '@/api/kpidept'
 import { Message } from 'element-ui'
 
 export default {
@@ -135,7 +157,9 @@ export default {
       ],
       dialogData: {},
       dialogVisible: false,
-      fileList: []
+      dialogOpenVisible: false,
+      fileList: [],
+      dbFileList: []
     }
   },
   watch: {
@@ -191,7 +215,37 @@ export default {
       if (!this.param_subcode) return;
       if (!this.param_level) return;
       // if (!this.param_iskpi) return;
+      this.getFileList();
       this.dialogVisible = true;
+    },
+    showOpenDlg(index, items, iskpi) {
+      this.dialogData.caption = 'Browse Evident : ' + items[index].subname;
+      this.param_subcode = items[index].subcode;
+      this.param_level = items[index].level;
+      this.param_iskpi = iskpi;
+
+      // console.log(this.param_iskpi);
+      if (!this.param_year) return;
+      if (!this.param_department_id) return;
+      if (!this.param_subcode) return;
+      if (!this.param_level) return;
+      // if (!this.param_iskpi) return;
+      this.getFileList();
+      this.dialogOpenVisible = true;
+    },
+    getFileList() {
+      if (this.param_iskpi) {
+        getFileListKPI(this.param_year, this.param_department_id, this.param_subcode, this.param_level).then(response => {
+          this.dbFileList = response.data;
+        })
+      } else {
+        getFileListML(this.param_year, this.param_department_id, this.param_subcode, this.param_level).then(response => {
+          this.dbFileList = response.data;
+        })
+      }
+    },
+    download(id) {
+      downloadFile(id);
     },
     cellStyle({ row, column, rowIndex, columnIndex }) {
       if (columnIndex === 0) {
@@ -229,7 +283,7 @@ export default {
       var url = '';
       if (this.param_iskpi) {
         url = getUploadURLKPI(this.param_year, this.param_department_id, this.param_subcode, this.param_level);
-      }else{
+      } else {
         url = getUploadURLML(this.param_year, this.param_department_id, this.param_subcode, this.param_level);
       }
       return url;
@@ -242,9 +296,10 @@ export default {
         duration: 5 * 1000
       })
     },
-    handleUploadSuccess(response, file, fileList){
-      console.log('sucess');
-      this.dialogVisible = false;
+    handleUploadSuccess(response, file, fileList) {
+      // console.log('sucess');
+      this.getFileList();
+      // this.dialogVisible = false;
       this.$message({
         type: 'success',
         message: response

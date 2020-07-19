@@ -15,9 +15,9 @@ rest.interceptors.request.use(
     //   config.headers['X-Token'] = getToken()
     // }
     // console.log(config);
-    if (config.method == 'post'){
-      config.headers['Content-Type'] ='multipart/form-data';
-      //2020-7-19 : with CORS site, post aplication/json will make twice post (before options).. fuck 
+    if (config.method === 'post') {
+      config.headers['Content-Type'] = 'multipart/form-data';
+      // 2020-7-19 : with CORS site, post aplication/json will make twice post (before options).. fuck
       // console.log('post bro');
     }
 
