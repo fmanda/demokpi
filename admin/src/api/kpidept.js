@@ -1,17 +1,24 @@
 import request from '@/utils/rest';
 
-export function getUploadURL(yearperiod, deptcode, subcode) {
-  // console.log(process.env.VUE_APP_BASE_API);
+export function getUploadURLKPI(yearperiod, deptid, subcode, level) {
   if (!yearperiod) return '';
-  if (!deptcode) return '';
+  if (!deptid) return '';
   if (!subcode) return '';
-
-  deptcode = deptcode.replace('.', '_');
-  subcode = subcode.replace('.', '_');
-
-  return process.env.VUE_APP_BASE_URL + '/kpidept_upload/' +
+  if (!level) return '';
+  return process.env.VUE_APP_BASE_URL + '/kpidept_upload_kpi/' +
     yearperiod.toString() + '/' +
-    deptcode + '/' + subcode;
+    deptid + '/' + subcode + '/' + level.toString();;
+}
+
+
+export function getUploadURLML(yearperiod, deptid, subcode, level) {
+  if (!yearperiod) return '';
+  if (!deptid) return '';
+  if (!subcode) return '';
+  if (!level) return '';
+  return process.env.VUE_APP_BASE_URL + '/kpidept_upload_ml/' +
+    yearperiod.toString() + '/' +
+    deptid + '/' + subcode  + '/' + level.toString();;
 }
 
 export function getUploadLog() {

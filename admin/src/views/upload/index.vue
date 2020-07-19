@@ -48,7 +48,7 @@
           <el-table-column width="70" header-align="center" prop="weight" label="Bobot" />
           <el-table-column width="100" label="Operations" header-align="center">
             <template slot-scope="sc">
-              <el-button type="text" @click.native.prevent="showDialog(sc.$index, kpidept.mlitems)">
+              <el-button type="text" @click.native.prevent="showDialog(sc.$index, kpidept.mlitems, false)">
                 <i class="el-icon-upload2" />  Upload
                 <!-- {{sc.row.key}} -->
               </el-button>
@@ -63,7 +63,7 @@
           :data="kpidept.kpiitems"
           :cell-style="cellStyle"
           style="width: 100%"
-          :span-method="onSpanMethod"
+          :span-method="onSpanMethodKPI"
         >
           <el-table-column width="150" header-align="center" prop="areaname" label="Area" />
           <el-table-column label="Sub Area" header-align="center">
@@ -75,7 +75,7 @@
           <el-table-column width="70" header-align="center" prop="weight" label="Bobot" />
           <el-table-column width="100" label="Operations" header-align="center">
             <template slot-scope="sc">
-              <el-button type="text" @click.native.prevent="showDialog(sc.$index, kpidept.kpiitems)">
+              <el-button type="text" @click.native.prevent="showDialog(sc.$index, kpidept.kpiitems, true)">
                 <i class="el-icon-upload2" />  Upload
                 <!-- {{sc.row.key}} -->
               </el-button>
@@ -111,7 +111,7 @@
 <script>
 import { getKPIDept, getListDept } from '@/api/department'
 import { spanRow } from '@/utils/spanRow'
-import { getUploadURL } from '@/api/kpidept'
+import { getUploadURLML, getUploadURLKPI } from '@/api/kpidept'
 import { Message } from 'element-ui'
 
 export default {
@@ -119,8 +119,9 @@ export default {
     return {
       param_year: null,
       param_department_id: null,
-      param_deptcode: null,
+      param_iskpi: null,
       param_subcode: null,
+      param_level: null,
       years: [{ id: 2020 }, { id: 2021 }, { id: 2022 }, { id: 2023 }, { id: 2024 }],
       kpidept: {
         mlitems: [],
@@ -175,13 +176,21 @@ export default {
     onSpanMethod({ row, column, rowIndex, columnIndex }) {
       return spanRow({ row, column, rowIndex, columnIndex }, this.kpidept.mlitems, this.optionSpan)
     },
-    showDialog(index, items) {
+    onSpanMethodKPI({ row, column, rowIndex, columnIndex }) {
+      return spanRow({ row, column, rowIndex, columnIndex }, this.kpidept.kpiitems, this.optionSpan)
+    },
+    showDialog(index, items, iskpi) {
       this.dialogData.caption = 'Upload Evident : ' + items[index].subname;
       this.param_subcode = items[index].subcode;
-      this.param_deptcode = this.kpidept.deptcode;
+      this.param_level = items[index].level;
+      this.param_iskpi = iskpi;
+
+      // console.log(this.param_iskpi);
       if (!this.param_year) return;
-      if (!this.param_deptcode) return;
+      if (!this.param_department_id) return;
       if (!this.param_subcode) return;
+      if (!this.param_level) return;
+      // if (!this.param_iskpi) return;
       this.dialogVisible = true;
     },
     cellStyle({ row, column, rowIndex, columnIndex }) {
@@ -217,8 +226,12 @@ export default {
       this.$refs.upload.submit();
     },
     getRestUploadURL() {
-      var url = getUploadURL(this.param_year, this.param_deptcode, this.param_subcode);
-      // console.log(url);
+      var url = '';
+      if (this.param_iskpi) {
+        url = getUploadURLKPI(this.param_year, this.param_department_id, this.param_subcode, this.param_level);
+      }else{
+        url = getUploadURLML(this.param_year, this.param_department_id, this.param_subcode, this.param_level);
+      }
       return url;
     },
     handleUploadError(err, file, fileList) {

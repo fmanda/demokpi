@@ -8,7 +8,7 @@
 		public static function getFields(){
 			return array(
 				"id", "user_id", "filename", "directory", "yearperiod", "department_id",
-				"ml_subarea", "kpi_subarea", "level_id"
+				"ml_subarea", "kpi_subarea", "level_id", "filepath"
 			);
 		}
 

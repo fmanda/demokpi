@@ -27,7 +27,7 @@
 				$db = null;
 				return $rows;
 			}catch(PDOException $e){
-				echo '{"error":{"text": '. $e->getMessage() .'}}' ;
+				echo '{"error":{"text": '. $e->getMessage() . '; sql : '.$sql.'}}' ;
 				throw $e;
 			}
 		}

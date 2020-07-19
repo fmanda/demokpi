@@ -26,6 +26,11 @@
 			return $obj;
 		}
 
+		public static function retrieveHeader($id){
+			$obj = parent::retrieve($id);
+			return $obj;
+		}
+
 		public static function deleteFromDB($id){
 			try{
 				$obj = parent::retrieve($id);

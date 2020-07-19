@@ -28,49 +28,9 @@ $app->get('/kpidept/{dept_id}/{year}', function ($request, $response, $args) {
 	}
 });
 
-$app->post('/kpidept_upload/{yearperiod}/{deptcode}/{subcode}', function(Request $request, Response $response) {
+$app->post('/kpidept_upload_ml/{yearperiod}/{deptid}/{subcode}/{level}', function(Request $request, Response $response) {
 	try{
-		$config = parse_ini_file("../src/config.ini");
-		$directory =  $config["upload_directory"];
-
-		$deptcode = $request->getAttribute('deptcode');
-		$subcode = $request->getAttribute('subcode');
-		$yearperiod = $request->getAttribute('yearperiod');
-
-		$tmp = DB::openQuery("select * from " .ModelDepartment::getTableName()." where deptcode = '". $deptcode. "'");
-		if (isset($obj[0])) $dept = $tmp[0];
-
-		$directory = $directory . DIRECTORY_SEPARATOR . $yearperiod
-			. DIRECTORY_SEPARATOR . $deptcode
-			. DIRECTORY_SEPARATOR . $subcode;
-
-		if (!file_exists($directory)) {
-			mkdir($directory, 0777, true);
-		}
-
-	  $uploadedFiles = $request->getUploadedFiles();
-		foreach ($uploadedFiles as $uploadedFile) {
-      if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
-        $filename = moveUploadedFile($directory, $uploadedFile);
-        $response->getBody()->write('uploaded ' . $directory . DIRECTORY_SEPARATOR . $filename . '<br/>');
-
-				$obj = new stdClass();
-				$obj->filename = $filename;
-				$obj->directory = $directory;
-				// $obj->directory = str_replace($directory, DIRECTORY_SEPARATOR ,  DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR) ;
-				$obj->yearperiod = $yearperiod;
-				$obj->ml_subarea = $subcode;
-
-				if (isset($dept)){
-					$obj->department_id = $dept->id;
-				}
-
-				$obj->user_id = 1;
-				ModelUploadLog::saveToDB($obj);
-      }
-    }
-
-		return $response;
+		return executeUploadFile($request, $response, false);
 	}catch(Exception $e){
 		$msg = $e->getMessage();
 		$response->getBody()->write($msg . ' directory ' . $directory);
@@ -78,6 +38,62 @@ $app->post('/kpidept_upload/{yearperiod}/{deptcode}/{subcode}', function(Request
 			->withHeader('Content-Type', 'text/html');
 	}
 });
+
+
+$app->post('/kpidept_upload_kpi/{yearperiod}/{deptid}/{subcode}/{level}', function(Request $request, Response $response) {
+	try{
+		return executeUploadFile($request, $response, true);
+	}catch(Exception $e){
+		$msg = $e->getMessage();
+		$response->getBody()->write($msg . ' directory ' . $directory);
+		return $response->withStatus(500)
+			->withHeader('Content-Type', 'text/html');
+	}
+});
+
+function executeUploadFile(Request &$request, Response &$repsonse, $isKPI){
+	$config = parse_ini_file("../src/config.ini");
+	$directory =  $config["upload_directory"];
+
+	$deptid = $request->getAttribute('deptid');
+	$level = $request->getAttribute('level');
+	$subcode = $request->getAttribute('subcode');
+	$yearperiod = $request->getAttribute('yearperiod');
+
+	$dept = ModelDepartment::retrieveHeader($deptid);
+	$deptcode = $dept->deptcode;
+
+	$directory = $directory . DIRECTORY_SEPARATOR . $yearperiod
+		. DIRECTORY_SEPARATOR . $deptcode
+		. DIRECTORY_SEPARATOR . $subcode;
+
+	if (!file_exists($directory)) {
+		mkdir($directory, 0777, true);
+	}
+
+	$uploadedFiles = $request->getUploadedFiles();
+	foreach ($uploadedFiles as $uploadedFile) {
+		if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
+			$filename = moveUploadedFile($directory, $uploadedFile);
+			$response->getBody()->write('uploaded ' . $directory . DIRECTORY_SEPARATOR . $filename . '; ');
+			$obj = new stdClass();
+			$obj->filename = $filename;
+			$obj->directory = $directory;
+			$obj->filepath = $directory . DIRECTORY_SEPARATOR . $filename;
+			$obj->yearperiod = $yearperiod;
+			if ($isKPI){
+				$obj->ml_kpiarea = $subcode;
+			}else{
+				$obj->ml_subarea = $subcode;
+			}
+			$obj->level_id = $level;
+			$obj->department_id = $dept->id;
+			$obj->user_id = 1;
+			ModelUploadLog::saveToDB($obj);
+		}
+	}
+}
+
 
 
 function moveUploadedFile($directory, UploadedFileInterface $uploadedFile)
