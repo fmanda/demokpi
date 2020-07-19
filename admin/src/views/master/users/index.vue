@@ -62,7 +62,7 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="saveData()">Update</el-button>
+        <el-button type="primary" @click.native.prevent="saveData()">Update</el-button>
         <el-button @click="dialogVisible = false">Cancel</el-button>
       </span>
     </el-dialog>

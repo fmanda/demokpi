@@ -28,7 +28,7 @@
 			return $obj;
 		}
 
-		public static function generateSQLInsert($obj){
+		public static function generateSQLInsert($obj, $db){
 			$classname = get_called_class();
 			try{
 				if ($obj == null){
@@ -56,7 +56,8 @@
 				    $sql = $sql. $field;
 					// if (!isset($obj->{$field}))
 					// 	throw new Exception("undeclared property $field on object $classname", 1);
-					$strvalue = $strvalue. "'". $obj->{$field} ."'";
+					// $strvalue = $strvalue. "'". $obj->{$field} ."'";
+					$strvalue = $strvalue. $db->quote($obj->{$field} );
 				}
 				$sql = "insert into ". static::getTableName() . "(" . $sql .")";
 				$sql = $sql. "values(" . $strvalue . ");";
@@ -66,7 +67,7 @@
 			}
 		}
 
-		public static function generateSQLUpdate($obj){
+		public static function generateSQLUpdate($obj, $db){
 			$strvalue = "";
 			$fields = static::getFields();
 			$classname = get_called_class();
@@ -80,7 +81,8 @@
 					$strvalue = $strvalue . ",";
 				}
 
-				$strvalue = $strvalue. $field ." = '". $obj->{$field} ."'";
+				// $strvalue = $strvalue. $field ." = '". $obj->{$field} ."'";
+				$strvalue = $strvalue. $field ." = ". $db->quote($obj->{$field});
 			}
 			$sql = "update ". static::getTableName() . " set " . $strvalue;
 			$sql = $sql. " where id = " . $obj->id . ";";
@@ -120,7 +122,7 @@
 			}
 		}
 
-		public static function generateSQL($obj){
+		public static function generateSQL($obj, $db){
 			if (isset($obj->restclient)){
 				if ($obj->restclient){
 					static::setIDByUID($obj);
@@ -128,9 +130,9 @@
 			}
 
 			if (static::isNewTransaction($obj)) {
-				return static::generateSQLInsert($obj);
+				return static::generateSQLInsert($obj, $db);
 			}else{
-				return static::generateSQLUpdate($obj);
+				return static::generateSQLUpdate($obj, $db);
 			}
 		}
 
@@ -141,7 +143,7 @@
 		public static function saveObjToDB($obj, $db){
 			// $sql = static::generateSQL($obj);
 			try {
-				$sql = static::generateSQL($obj);
+				$sql = static::generateSQL($obj, $db);
 				$int = $db->prepare($sql)->execute();
 				if (static::isNewTransaction($obj)){
 					$obj->id = $db->lastInsertId();

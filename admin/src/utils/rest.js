@@ -9,11 +9,18 @@ const rest = axios.create({
 // request interceptor
 rest.interceptors.request.use(
   config => {
+    // console.log(rest);
     // do something before request is sent
     // if (store.getters.token) {
     //   config.headers['X-Token'] = getToken()
     // }
-    // console.log(process.env)
+    // console.log(config);
+    if (config.method == 'post'){
+      config.headers['Content-Type'] ='multipart/form-data';
+      //2020-7-19 : with CORS site, post aplication/json will make twice post (before options).. fuck 
+      // console.log('post bro');
+    }
+
     return config
   },
   error => {

@@ -37,7 +37,7 @@ $app->post('/kpidept_upload/{yearperiod}/{deptcode}/{subcode}', function(Request
 		$subcode = $request->getAttribute('subcode');
 		$yearperiod = $request->getAttribute('yearperiod');
 
-		$tmp = DB::openQuery("select * from " .ModelDepartment::getTableName()." where deptcode='". $deptcode. "'");
+		$tmp = DB::openQuery("select * from " .ModelDepartment::getTableName()." where deptcode = '". $deptcode. "'");
 		if (isset($obj[0])) $dept = $tmp[0];
 
 		$directory = $directory . DIRECTORY_SEPARATOR . $yearperiod
@@ -56,7 +56,8 @@ $app->post('/kpidept_upload/{yearperiod}/{deptcode}/{subcode}', function(Request
 
 				$obj = new stdClass();
 				$obj->filename = $filename;
-				$obj->directory = str_replace($directory, DIRECTORY_SEPARATOR ,  DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR) ;
+				$obj->directory = $directory;
+				// $obj->directory = str_replace($directory, DIRECTORY_SEPARATOR ,  DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR) ;
 				$obj->yearperiod = $yearperiod;
 				$obj->ml_subarea = $subcode;
 

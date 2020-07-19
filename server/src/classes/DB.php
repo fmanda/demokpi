@@ -9,7 +9,7 @@
 			$dbpassword = $config['password'];
 
 			$mysql_connect_str = "mysql:host=$dbhost;dbname=$dbname";
-			$conn = $dbconnection = new PDO($mysql_connect_str, $dbuser, $dbpassword);
+			$conn = new PDO($mysql_connect_str, $dbuser, $dbpassword);
 			$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			return $conn;
 		}

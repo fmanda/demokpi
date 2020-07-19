@@ -1,5 +1,6 @@
 import request from '@/utils/rest'
 
+
 export function getUsers() {
   return request({
     url: 'users',
@@ -28,3 +29,11 @@ export function postUser(data) {
     data
   })
 }
+
+// export function postUser(data) {
+//   return request({
+//     url: 'users',
+//     method: 'post',
+//     data
+//   })
+// }

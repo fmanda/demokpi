@@ -91,6 +91,7 @@
         class="upload-demo"
         :action="getRestUploadURL()"
         :on-error="handleUploadError"
+        :on-success="handleUploadSuccess"
         multiple
         :file-list="fileList"
         :auto-upload="false"
@@ -214,11 +215,6 @@ export default {
     },
     submitUpload() {
       this.$refs.upload.submit();
-      this.dialogVisible = false;
-      this.$message({
-        type: 'success',
-        message: 'Data Berhasil Diupload'
-      });
     },
     getRestUploadURL() {
       var url = getUploadURL(this.param_year, this.param_deptcode, this.param_subcode);
@@ -232,6 +228,14 @@ export default {
         type: 'error',
         duration: 5 * 1000
       })
+    },
+    handleUploadSuccess(response, file, fileList){
+      console.log('sucess');
+      this.dialogVisible = false;
+      this.$message({
+        type: 'success',
+        message: response
+      });
     }
 
   }
