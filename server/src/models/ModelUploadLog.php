@@ -17,6 +17,14 @@
 			$db = $db->connect();
 			$db->beginTransaction();
 			try {
+				if (!isset($obj->id)){
+					$obj->id = 0;
+				}
+				$sql = 'delete from upload_log where filepath = '. $db->quote($obj->filepath)
+						. ' and id <> '. $db->quote($obj->id)
+						. ' and level_id = '. $db->quote($obj->level_id);
+				$db->prepare($sql)->execute();
+
 				static::saveObjToDB($obj, $db);
 				$db->commit();
 				$db = null;

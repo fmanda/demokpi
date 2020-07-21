@@ -63,44 +63,13 @@ $app->get('/downloadfile/{id}', function ($request, $response) {
 });
 
 
-
-$app->get('/testimage', function ($request, $response) {
-  try{
-    // $file = 'upload\2020\L3\L3_17\rainbow_six_siege_outbreak_4k_8k-wide.jpg';
-    $file = 'upload/2020/L3/L3_17/rainbow_six_siege_outbreak_4k_8k-wide.jpg';
-    // $file = 'test.jpg';
-    $newStream = new LazyOpenStream($file, 'r');
-    // $response = $response->withBody($newStream);
-    return $response->withStatus(200)
-      ->withHeader('Content-Type', 'application/force-download')
-      ->withHeader('Content-Type', 'application/octet-stream')
-      ->withHeader('Content-Type', 'application/download')
-      ->withHeader('Content-Description', 'File Transfer')
-      ->withHeader('Content-Transfer-Encoding', 'binary')
-      ->withHeader('Content-Disposition', 'attachment; filename="' . basename($file) . '"')
-      ->withHeader('Expires', '0')
-      ->withHeader('Content-Length', filesize($file))
-      ->withHeader('Cache-Control', 'must-revalidate')
-      ->withHeader('Pragma', 'public')
-      ->withBody($newStream);
-    // return $response;
-  }catch(Exception $e){
-    $msg = $e->getMessage();
-    $response->getBody()->write($msg);
-    return $response->withStatus(500)
-      ->withHeader('Content-Type', 'text/html');
-  }
-
-});
-
 $app->get('/filelistkpi/{yearperiod}/{deptid}/{subcode}/{level}', function(Request $request, Response $response) {
 	try{
-		$str = 'select id, filename , filepath ' // concat('http://127.0.0.1/file/' , id) as link_id
-				.' from upload_log '
-				.' where yearperiod = '. $request->getAttribute('yearperiod')
-				.' and department_id = '. $request->getAttribute('deptid')
-				.' and kpi_subarea = '. "'" . $request->getAttribute('subcode') . "'"
-				.' and level_id = '. $request->getAttribute('level');
+		$str = 'select a.*, b.username from upload_log a left join users b on a.user_id = b.id'
+				.' where a.yearperiod = '. $request->getAttribute('yearperiod')
+				.' and a.department_id = '. $request->getAttribute('deptid')
+				.' and a.kpi_subarea = '. "'" . $request->getAttribute('subcode') . "'"
+				.' and a.level_id = '. $request->getAttribute('level');
 
     $data = DB::openQuery($str);
     $json = json_encode($data);
@@ -116,12 +85,11 @@ $app->get('/filelistkpi/{yearperiod}/{deptid}/{subcode}/{level}', function(Reque
 
 $app->get('/filelistml/{yearperiod}/{deptid}/{subcode}/{level}', function(Request $request, Response $response) {
 	try{
-		$str = 'select id, filename , filepath ' // concat('http://127.0.0.1/file/' , id) as link_id
-				.' from upload_log '
-				.' where yearperiod = '. $request->getAttribute('yearperiod')
-				.' and department_id = '. $request->getAttribute('deptid')
-				.' and ml_subarea = '. "'" . $request->getAttribute('subcode') . "'"
-				.' and level_id = '. $request->getAttribute('level');
+		$str = 'select a.*, b.username from upload_log a left join users b on a.user_id = b.id'
+				.' where a.yearperiod = '. $request->getAttribute('yearperiod')
+				.' and a.department_id = '. $request->getAttribute('deptid')
+				.' and a.ml_subarea = '. "'" . $request->getAttribute('subcode') . "'"
+				.' and a.level_id = '. $request->getAttribute('level');
 
     $data = DB::openQuery($str);
     $json = json_encode($data);

@@ -43,10 +43,18 @@
             <el-table-column width="70" header-align="center" prop="subcode" label="No" />
             <el-table-column width="250" header-align="center" prop="subdesc" label="Sub Name" />
           </el-table-column>
-          <el-table-column width="180" header-align="center" prop="levelcode" label="Level" />
+          <el-table-column width="180" header-align="center" prop="levelcode" label="Level">
+            <template slot-scope="sc">
+              <el-tag :type="getTagType(sc)"> Lv {{sc.row.level}}</el-tag>
+              {{sc.row.levelcode}}
+            </template>
+          </el-table-column>
           <el-table-column header-align="center" prop="leveldetail" label="Uraian" />
-          <el-table-column width="70" header-align="center" prop="weight" label="Bobot" />
-
+          <el-table-column width="70" header-align="center" prop="weight" label="Bobot">
+            <template slot-scope="sc">
+              <el-tag :type="getTagType(sc)" effect="plain"> {{sc.row.weight}}</el-tag>
+            </template>
+          </el-table-column>
           <el-table-column width="110" label="Operations" header-align="center">
             <template slot-scope="sc">
               <el-button-group>
@@ -71,9 +79,18 @@
             <el-table-column width="70" header-align="center" prop="subcode" label="No" />
             <el-table-column width="250" header-align="center" prop="subdesc" label="Sub Name" />
           </el-table-column>
-          <el-table-column width="180" header-align="center" prop="levelcode" label="Level" />
+          <el-table-column width="180" header-align="center" prop="levelcode" label="Level">
+            <template slot-scope="sc">
+              <el-tag :type="getTagType(sc)"> Lv {{sc.row.level}}</el-tag>
+              {{sc.row.levelcode}}
+            </template>
+          </el-table-column>
           <el-table-column header-align="center" prop="leveldetail" label="Uraian" />
-          <el-table-column width="70" header-align="center" prop="weight" label="Bobot" />
+          <el-table-column width="70" header-align="center" prop="weight" label="Bobot">
+            <template slot-scope="sc">
+              <el-tag :type="getTagType(sc)" effect="plain"> {{sc.row.weight}}</el-tag>
+            </template>
+          </el-table-column>
           <el-table-column width="110" label="Operations" header-align="center">
             <template slot-scope="sc">
               <el-button-group>
@@ -194,6 +211,29 @@ export default {
 
       getKPIDept(deptid, year).then(response => {
         this.kpidept = response.data;
+
+        var lvl = '';
+        var indexLvl = 0;
+        for (var item of this.kpidept.mlitems){
+          if (item.subcode == lvl){
+            item.indexLvl = indexLvl
+          }else{
+            lvl = item.subcode;
+            indexLvl++;
+            item.indexLvl = indexLvl;
+          }
+        }
+
+        indexLvl = 0;
+        for (var item of this.kpidept.kpiitems){
+          if (item.subcode == lvl){
+            item.indexLvl = indexLvl
+          }else{
+            lvl = item.subcode;
+            indexLvl++;
+            item.indexLvl = indexLvl;
+          }
+        }
         this.listLoading = false;
       })
     },
@@ -252,33 +292,20 @@ export default {
       downloadFile(id);
     },
     cellStyle({ row, column, rowIndex, columnIndex }) {
-      if (columnIndex === 0) {
-        return 'font-weight: bold; color: rgb(64, 158, 255);'
-      }
-      if (row.level === 1 && columnIndex === 2) {
-        return 'font-weight: bold; color: rgb(64, 158, 255);'
-      }
-      if (columnIndex === 3) {
-        return 'color: rgb(64, 158, 255);'
-      }
-      if (columnIndex === 1) {
-        return 'font-weight: bold; color: rgb(64, 158, 255);'
-      }
-      if (row.level > 1 && columnIndex === 2) {
-        return 'font-size: 13px';
-      }
-      // if (columnIndex === 4) {
-      //   return 'font-size: 13px';
-      // }
+      var str ='';
 
-      // if ([4,5].includes(columnIndex)){
-      // if (columnIndex === 3) {
-      //   if (row.level === 1) return 'color:#CC0033;';
-      //   if (row.level === 2) return 'color:#993300;';
-      //   if (row.level === 3) return 'color:#FF3300;';
-      //   if (row.level === 4) return 'color:#0000FF;';
-      //   if (row.level === 5) return 'color:#006600;';
-      // }
+      if ((row.indexLvl % 2) === 0){
+        str = str + ' background-color: rgb(255, 255, 228); '
+      }
+
+      if ((columnIndex === 0) || (row.level === 1 && columnIndex === 2) || (columnIndex === 1)){
+        str = str + ' font-weight: bold; color: rgb(64, 158, 255);'
+      }
+
+      if ((row.level > 1 && columnIndex === 2) || (columnIndex === 3)) {
+        str = str + ' font-size: 13px; line-height:1;';
+      }
+      return str;
     },
     submitUpload() {
       this.$refs.upload.submit();
@@ -308,6 +335,14 @@ export default {
         type: 'success',
         message: response
       });
+    },
+    getTagType(sc){
+      if (sc.row.level === 1) return "danger";
+      if (sc.row.level === 2) return "success";
+      if (sc.row.level === 3) return "info";
+      if (sc.row.level === 4) return "";
+      if (sc.row.level === 5) return "success";
+
     }
 
   }

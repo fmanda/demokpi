@@ -59,7 +59,7 @@ export const constantRoutes = [
     path: '/master',
     component: Layout,
     name: 'Master',
-    meta: { title: 'Master Data', icon: 'link' },
+    meta: { title: 'Master Data', icon: 'table' },
     children: [
       {
         path: 'department',
@@ -94,7 +94,20 @@ export const constantRoutes = [
         path: 'upload',
         name: 'Upload',
         component: () => import('@/views/upload/index'),
-        meta: { title: 'Upload Data', icon: 'form' }
+        meta: { title: 'Upload Data', icon: 'link' }
+      }
+    ]
+  },
+
+  {
+    path: '/preview',
+    component: Layout,
+    children: [
+      {
+        path: 'preview',
+        name: 'Preview',
+        component: () => import('@/views/preview/index'),
+        meta: { title: 'Preview Data', icon: 'eye-open' }
       }
     ]
   },
@@ -107,7 +120,7 @@ export const constantRoutes = [
         path: 'directory',
         name: 'Directory',
         component: () => import('@/views/directory/index'),
-        meta: { title: 'Directory', icon: 'form' }
+        meta: { title: 'Directory', icon: 'nested' }
       }
     ]
   },
@@ -119,7 +132,7 @@ export const constantRoutes = [
         path: 'uploadlog',
         name: 'uploadlog',
         component: () => import('@/views/upload/log'),
-        meta: { title: 'Log Upload', icon: 'form' }
+        meta: { title: 'Log Upload', icon: 'example' }
       }
     ]
   },
@@ -131,7 +144,7 @@ export const constantRoutes = [
         path: 'assement',
         name: 'Assement',
         component: () => import('@/views/assesment/index'),
-        meta: { title: 'Assement', icon: 'form' }
+        meta: { title: 'Assement', icon: 'tree' }
       }
     ]
   },
