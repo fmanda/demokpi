@@ -23,7 +23,7 @@ $app->add(function ($request, $handler) {
 
 
 $app->get('/', function (Request $request, Response $response, $args) {
-    $response->getBody()->write("Hello world !");
+    $response->getBody()->write("Server Ready !");
     return $response;
 });
 

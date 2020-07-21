@@ -237,10 +237,14 @@ export default {
       if (this.param_iskpi) {
         getFileListKPI(this.param_year, this.param_department_id, this.param_subcode, this.param_level).then(response => {
           this.dbFileList = response.data;
+        }).catch(() => {
+          this.dbFileList = [];
         })
       } else {
         getFileListML(this.param_year, this.param_department_id, this.param_subcode, this.param_level).then(response => {
           this.dbFileList = response.data;
+        }).catch(() => {
+          this.dbFileList = [];
         })
       }
     },
