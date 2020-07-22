@@ -132,7 +132,7 @@
       </el-table>
     </el-dialog>
 
-    <el-dialog :title="dialogData.caption" :visible.sync="dialogOpenVisible" label-position="top">
+    <!-- <el-dialog :title="dialogData.caption" :visible.sync="dialogOpenVisible" label-position="top">
       <el-table :data="dbFileList">
         <el-table-column width="500" header-align="center" prop="filename" label="FileName" />
         <el-table-column width="100" label="Operations" header-align="center">
@@ -143,7 +143,7 @@
           </template>
         </el-table-column>
       </el-table>
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 
@@ -156,6 +156,7 @@ import { Message } from 'element-ui'
 export default {
   data() {
     return {
+      listLoading: null,
       param_year: null,
       param_department_id: null,
       param_iskpi: null,
@@ -188,8 +189,16 @@ export default {
     }
   },
   created() {
-    this.fetchDepts()
-    this.fetchData();
+    this.fetchDepts();
+    // this.fetchData();
+
+    this.param_year = new Date().getFullYear();
+
+    console.log(this.$route.params);
+    if (this.$route.params) {
+      this.param_department_id = this.$route.params.deptid;
+      this.param_year = this.$route.params.year;
+    }
   },
   methods: {
     fetchDepts() {
@@ -258,20 +267,19 @@ export default {
       this.getFileList();
       this.dialogVisible = true;
     },
-    showOpenDlg(index, items, iskpi) {
-      this.dialogData.caption = 'Browse Evident : ' + items[index].subname;
-      this.param_subcode = items[index].subcode;
-      this.param_level = items[index].level;
-      this.param_iskpi = iskpi;
-
-      // console.log(this.param_iskpi);
+    showOpenDlg(index, items, is_kpi) {
       if (!this.param_year) return;
       if (!this.param_department_id) return;
-      if (!this.param_subcode) return;
-      if (!this.param_level) return;
-      // if (!this.param_iskpi) return;
-      this.getFileList();
-      this.dialogOpenVisible = true;
+      this.$router.push({
+        name: 'preview',
+        params: {
+          year : this.param_year,
+          deptid : this.param_department_id,
+          level : items[index].level,
+          iskpi : is_kpi,
+          subcode : items[index].subcode,
+        }
+      })
     },
     getFileList() {
       if (this.param_iskpi) {

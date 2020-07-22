@@ -7,6 +7,13 @@ export function getDepartment(deptid) {
   })
 }
 
+export function getDeptHeader(deptid) {
+  return request({
+    url: 'departmentheader/' + deptid.toString(),
+    method: 'get'
+  })
+}
+
 export function getListDept() {
   return request({
     url: 'department',

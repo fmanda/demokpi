@@ -92,7 +92,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'upload',
-        name: 'Upload',
+        name: 'upload',
         component: () => import('@/views/upload/index'),
         meta: { title: 'Upload Data', icon: 'link' }
       }
@@ -105,7 +105,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'preview',
-        name: 'Preview',
+        name: 'preview',
         component: () => import('@/views/preview/index'),
         meta: { title: 'Preview Data', icon: 'eye-open' }
       }
