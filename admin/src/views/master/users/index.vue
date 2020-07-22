@@ -12,7 +12,7 @@
       <el-table-column
         align="right"
       >
-        <template slot="header">
+        <template slot="header" slot-scope="scope">
           <el-input
             v-model="search"
             size="mini"
@@ -75,7 +75,7 @@ import { getListDept } from '@/api/department'
 
 export default {
   data() {
-    return {
+    return {      
       data: [],
       depts: [],
       listLoading: true,
@@ -145,7 +145,7 @@ export default {
 }
 </script>
 
-<style scoped>
+/<style scoped>
   .el-table >>> .cell {
     word-break: break-word;
     white-space: pre-wrap;
