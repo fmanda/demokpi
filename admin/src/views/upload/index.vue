@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div id="container" class="app-container">
     <el-form ref="form" :model="dialogData" label-width="120px" label-position="top">
       <el-form-item label="">
         <el-col :span="2">
@@ -45,14 +45,14 @@
           </el-table-column>
           <el-table-column width="180" header-align="center" prop="levelcode" label="Level">
             <template slot-scope="sc">
-              <el-tag :type="getTagType(sc)"> Lv {{sc.row.level}}</el-tag>
-              {{sc.row.levelcode}}
+              <el-tag :type="getTagType(sc)"> Lv {{ sc.row.level }}</el-tag>
+              {{ sc.row.levelcode }}
             </template>
           </el-table-column>
           <el-table-column header-align="center" prop="leveldetail" label="Uraian" />
           <el-table-column width="70" header-align="center" prop="weight" label="Bobot">
             <template slot-scope="sc">
-              <el-tag :type="getTagType(sc)" effect="plain"> {{sc.row.weight}}</el-tag>
+              <el-tag :type="getTagType(sc)" effect="plain"> {{ sc.row.weight }}</el-tag>
             </template>
           </el-table-column>
           <el-table-column width="110" label="Operations" header-align="center">
@@ -81,14 +81,14 @@
           </el-table-column>
           <el-table-column width="180" header-align="center" prop="levelcode" label="Level">
             <template slot-scope="sc">
-              <el-tag :type="getTagType(sc)"> Lv {{sc.row.level}}</el-tag>
-              {{sc.row.levelcode}}
+              <el-tag :type="getTagType(sc)"> Lv {{ sc.row.level }}</el-tag>
+              {{ sc.row.levelcode }}
             </template>
           </el-table-column>
           <el-table-column header-align="center" prop="leveldetail" label="Uraian" />
           <el-table-column width="70" header-align="center" prop="weight" label="Bobot">
             <template slot-scope="sc">
-              <el-tag :type="getTagType(sc)" effect="plain"> {{sc.row.weight}}</el-tag>
+              <el-tag :type="getTagType(sc)" effect="plain"> {{ sc.row.weight }}</el-tag>
             </template>
           </el-table-column>
           <el-table-column width="110" label="Operations" header-align="center">
@@ -191,10 +191,8 @@ export default {
   created() {
     this.fetchDepts();
     // this.fetchData();
-
     this.param_year = new Date().getFullYear();
-
-    console.log(this.$route.params);
+    // console.log(this.$route.params);
     if (this.$route.params) {
       this.param_department_id = this.$route.params.deptid;
       this.param_year = this.$route.params.year;
@@ -223,10 +221,10 @@ export default {
 
         var lvl = '';
         var indexLvl = 0;
-        for (var item of this.kpidept.mlitems){
-          if (item.subcode == lvl){
+        for (var item of this.kpidept.mlitems) {
+          if (item.subcode === lvl) {
             item.indexLvl = indexLvl
-          }else{
+          } else {
             lvl = item.subcode;
             indexLvl++;
             item.indexLvl = indexLvl;
@@ -234,10 +232,10 @@ export default {
         }
 
         indexLvl = 0;
-        for (var item of this.kpidept.kpiitems){
-          if (item.subcode == lvl){
+        for (item of this.kpidept.kpiitems) {
+          if (item.subcode === lvl) {
             item.indexLvl = indexLvl
-          }else{
+          } else {
             lvl = item.subcode;
             indexLvl++;
             item.indexLvl = indexLvl;
@@ -273,11 +271,12 @@ export default {
       this.$router.push({
         name: 'preview',
         params: {
-          year : this.param_year,
-          deptid : this.param_department_id,
-          level : items[index].level,
-          iskpi : is_kpi,
-          subcode : items[index].subcode,
+          year: this.param_year,
+          deptid: this.param_department_id,
+          level: items[index].level,
+          iskpi: is_kpi,
+          subcode: items[index].subcode,
+          sender: 'upload'
         }
       })
     },
@@ -300,13 +299,13 @@ export default {
       downloadFile(id);
     },
     cellStyle({ row, column, rowIndex, columnIndex }) {
-      var str ='';
+      var str = '';
 
-      if ((row.indexLvl % 2) === 0){
+      if ((row.indexLvl % 2) === 0) {
         str = str + ' background-color: rgb(255, 255, 228); '
       }
 
-      if ((columnIndex === 0) || (row.level === 1 && columnIndex === 2) || (columnIndex === 1)){
+      if ((columnIndex === 0) || (row.level === 1 && columnIndex === 2) || (columnIndex === 1)) {
         str = str + ' font-weight: bold; color: rgb(64, 158, 255);'
       }
 
@@ -344,13 +343,12 @@ export default {
         message: response
       });
     },
-    getTagType(sc){
-      if (sc.row.level === 1) return "danger";
-      if (sc.row.level === 2) return "success";
-      if (sc.row.level === 3) return "info";
-      if (sc.row.level === 4) return "";
-      if (sc.row.level === 5) return "success";
-
+    getTagType(sc) {
+      if (sc.row.level === 1) return 'danger';
+      if (sc.row.level === 2) return 'success';
+      if (sc.row.level === 3) return 'info';
+      if (sc.row.level === 4) return '';
+      if (sc.row.level === 5) return 'success';
     }
 
   }

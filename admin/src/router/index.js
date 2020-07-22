@@ -88,6 +88,7 @@ export const constantRoutes = [
 
   {
     path: '/upload',
+    // name: 'upload_p',
     component: Layout,
     children: [
       {
@@ -102,6 +103,7 @@ export const constantRoutes = [
   {
     path: '/preview',
     component: Layout,
+    hidden: true,
     children: [
       {
         path: 'preview',
@@ -137,14 +139,14 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/assement',
+    path: '/assesment',
     component: Layout,
     children: [
       {
-        path: 'assement',
-        name: 'Assement',
+        path: 'assesment',
+        name: 'assesment',
         component: () => import('@/views/assesment/index'),
-        meta: { title: 'Assement', icon: 'tree' }
+        meta: { title: 'Assesment', icon: 'tree' }
       }
     ]
   },
@@ -152,10 +154,20 @@ export const constantRoutes = [
   { path: '*', redirect: '/404', hidden: true }
 ]
 
+const scrollBehavior = (to, from, savedPosition) => {
+  if (savedPosition) {
+    return savedPosition;
+  } else {
+    return { x: 0, y: 0 }
+  }
+};
+
 const createRouter = () => new Router({
-  // mode: 'history', // require service support
-  scrollBehavior: () => ({ y: 0 }),
+  mode: 'history', // require service support
+  // scrollBehavior: () => ({ y: 0 }),
+  scrollBehavior,
   routes: constantRoutes
+
 })
 
 const router = createRouter()
