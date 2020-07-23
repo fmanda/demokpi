@@ -3,3 +3,4 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^ index.php [QSA,L]
 RewriteRule ^favicon\.ico$ /images/favicon.ico [L]
+RewriteRule .* - [env=HTTP_AUTHORIZATION:%{HTTP:Authorization}]

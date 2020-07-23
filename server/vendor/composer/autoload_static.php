@@ -30,6 +30,11 @@ class ComposerStaticInit963113c1bcc1bbec4d4808358de346a6
     );
 
     public static $prefixLengthsPsr4 = array (
+        'T' => 
+        array (
+            'Tuupola\\Middleware\\' => 19,
+            'Tuupola\\Http\\Factory\\' => 21,
+        ),
         'S' => 
         array (
             'Slim\\Psr7\\' => 10,
@@ -64,12 +69,22 @@ class ComposerStaticInit963113c1bcc1bbec4d4808358de346a6
         ),
         'F' => 
         array (
+            'Firebase\\JWT\\' => 13,
             'Fig\\Http\\Message\\' => 17,
             'FastRoute\\' => 10,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
+        'Tuupola\\Middleware\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/tuupola/callable-handler/src',
+            1 => __DIR__ . '/..' . '/tuupola/slim-jwt-auth/src',
+        ),
+        'Tuupola\\Http\\Factory\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/tuupola/http-factory/src',
+        ),
         'Slim\\Psr7\\' => 
         array (
             0 => __DIR__ . '/..' . '/slim/psr7/src',
@@ -127,6 +142,10 @@ class ComposerStaticInit963113c1bcc1bbec4d4808358de346a6
         'GuzzleHttp\\Psr7\\' => 
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/psr7/src',
+        ),
+        'Firebase\\JWT\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
         ),
         'Fig\\Http\\Message\\' => 
         array (

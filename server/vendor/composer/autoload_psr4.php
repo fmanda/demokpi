@@ -6,6 +6,8 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Tuupola\\Middleware\\' => array($vendorDir . '/tuupola/callable-handler/src', $vendorDir . '/tuupola/slim-jwt-auth/src'),
+    'Tuupola\\Http\\Factory\\' => array($vendorDir . '/tuupola/http-factory/src'),
     'Slim\\Psr7\\' => array($vendorDir . '/slim/psr7/src'),
     'Slim\\Http\\' => array($vendorDir . '/slim/http/src'),
     'Slim\\' => array($vendorDir . '/slim/slim/Slim'),
@@ -20,6 +22,7 @@ return array(
     'Http\\Message\\' => array($vendorDir . '/php-http/message-factory/src'),
     'Http\\Factory\\Guzzle\\' => array($vendorDir . '/http-interop/http-factory-guzzle/src'),
     'GuzzleHttp\\Psr7\\' => array($vendorDir . '/guzzlehttp/psr7/src'),
+    'Firebase\\JWT\\' => array($vendorDir . '/firebase/php-jwt/src'),
     'Fig\\Http\\Message\\' => array($vendorDir . '/fig/http-message-util/src'),
     'FastRoute\\' => array($vendorDir . '/nikic/fast-route/src'),
 );
