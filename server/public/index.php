@@ -8,6 +8,8 @@ require __DIR__ . '/../vendor/autoload.php';
 
 $app = AppFactory::create();
 
+$app->setBasePath('/public');
+
 // $app->options('/{routes:.+}', function ($request, $response, $args) {
 //     return $response;
 // });
