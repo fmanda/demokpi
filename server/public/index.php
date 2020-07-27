@@ -5,17 +5,34 @@ use Slim\Factory\AppFactory;
 use Slim\Exception\HttpNotFoundException;
 
 require __DIR__ . '/../vendor/autoload.php';
+$config = parse_ini_file("../src/config.ini");
 
 $app = AppFactory::create();
 
 $app->setBasePath('/public');
 
+$app->addErrorMiddleware(true, false, false);
+
+$app->add(new Tuupola\Middleware\JwtAuthentication([
+    "secret" => $config["secret"],
+    "algorithm" => ["HS256"],
+    "rules" => [
+        new Tuupola\Middleware\JwtAuthentication\RequestPathRule([
+            "ignore" => [
+              $app->getBasePath() . "/check",
+              $app->getBasePath() . "/users"
+            ]
+        ]),
+        new Tuupola\Middleware\JwtAuthentication\RequestMethodRule([
+            "ignore" => ["OPTIONS"]
+        ])
+    ]
+]));
+
 
 $app->options('/{routes:.+}', function ($request, $response, $args) {
     return $response;
 });
-
-$app->addErrorMiddleware(true, false, false);
 
 $app->add(function ($request, $handler) {
     $response = $handler->handle($request);
@@ -26,7 +43,7 @@ $app->add(function ($request, $handler) {
 });
 
 
-$app->get('/', function (Request $request, Response $response, $args) {
+$app->get('/check', function (Request $request, Response $response, $args) {
     $response->getBody()->write("Server Ready !");
     return $response;
 });

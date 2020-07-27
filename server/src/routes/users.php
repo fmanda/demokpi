@@ -69,3 +69,27 @@ $app->get('/users_delete/{id}', function ($request, $response) {  //if hosting n
 			->withHeader('Content-Type', 'text/html');
 	}
 });
+
+$app->post('/login', function (Request $request, Response $response, array $args) {
+  $config = parse_ini_file("../src/config.ini");
+  $input = $request->getParsedBody();
+  $username=trim(strip_tags($input['username']));
+  $password=trim(strip_tags($input['password']));
+  $sql = 'SELECT * FROM users WHERE username=:username AND password=:password';
+  $sth = $this->db->prepare($sql);
+  $sth->bindParam("username", $username);
+  $sth->bindParam("password", $password);
+  $sth->execute();
+  $user = $sth->fetchObject();
+  if(!$user) {
+      return $this->response->withJson(['status' => 'error', 'message' => 'These credentials do not match our records username.']);
+  }
+  $settings = $this->get('settings');
+  $token = array(
+      'IdUser' =>  $user->IdUser,
+      'Username' => $user->Username
+  );
+  $token = JWT::encode($token, $settings['jwt']['secret'], "HS256");
+  return $this->response->withJson(['status' => 'success','data'=>$user, 'token' => $token]);
+
+});
