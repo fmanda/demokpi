@@ -29,6 +29,14 @@ export function postUser(data) {
   })
 }
 
+export function login(data) {
+  return request({
+    url: 'login',
+    method: 'post',
+    data
+  })
+}
+
 // export function postUser(data) {
 //   return request({
 //     url: 'users',

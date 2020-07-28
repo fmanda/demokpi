@@ -36,4 +36,12 @@
 				throw $e;
 			}
 		}
+
+		public static function retrieveLogin($username, $password){
+			$obj = DB::openQuery("select id, username, fullname, department_id from ".static::getTableName()
+				." where username = '" . $username . "'"
+				." and password = '" . $password . "'"
+			);
+			if (isset($obj[0])) return $obj[0];
+		}
 	}

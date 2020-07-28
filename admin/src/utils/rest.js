@@ -1,5 +1,7 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
+import store from '@/store'
+import { getToken } from '@/utils/auth'
 
 const rest = axios.create({
   baseURL: process.env.VUE_APP_BASE_URL,
@@ -11,12 +13,13 @@ rest.interceptors.request.use(
   config => {
     // console.log(rest);
     // do something before request is sent
-    // if (store.getters.token) {
-    //   config.headers['X-Token'] = getToken()
-    // }
+    if (store.getters.token) {
+      config.headers['Authorization'] = getToken()
+    }
     // console.log(config);
     if (config.method === 'post') {
-      config.headers['Content-Type'] = 'multipart/form-data';
+      // config.headers['Content-Type'] = 'multipart/form-data'
+      config.headers['Content-Type'] = 'undefined'
       // 2020-7-19 : with CORS site, post aplication/json will make twice post (before options).. fuck
       // console.log('post bro');
     }

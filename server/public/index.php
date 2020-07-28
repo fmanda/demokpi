@@ -14,13 +14,16 @@ $app->setBasePath('/public');
 $app->addErrorMiddleware(true, false, false);
 
 $app->add(new Tuupola\Middleware\JwtAuthentication([
+    // "header" => "X-Token", default Authorization
+    "regexp" => "/(.*)/", //default format Bearer <token>
     "secret" => $config["secret"],
     "algorithm" => ["HS256"],
     "rules" => [
         new Tuupola\Middleware\JwtAuthentication\RequestPathRule([
             "ignore" => [
               $app->getBasePath() . "/check",
-              $app->getBasePath() . "/users"
+              $app->getBasePath() . "/login",
+              $app->getBasePath() . "/kpidept_upload_ml",
             ]
         ]),
         new Tuupola\Middleware\JwtAuthentication\RequestMethodRule([

@@ -1,12 +1,14 @@
 // import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
+import { login } from '@/api/users'
 
 const getDefaultState = () => {
   return {
     token: getToken(),
     name: '',
-    avatar: ''
+    department_id : 0,
+    avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'
   }
 }
 
@@ -24,11 +26,35 @@ const mutations = {
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
+  },
+  SET_DEPARTMENT_ID: (state, department_id) => {
+    state.department_id = department_id
   }
 }
 
 const actions = {
+
   login({ commit }, userInfo) {
+    const { username, password } = userInfo
+    return new Promise((resolve, reject) => {
+      login({ username: username.trim(), password: password }).then(response => {
+
+        const { data } = response
+        commit('SET_TOKEN', data.token)
+        commit('SET_NAME', data.user.username)
+        commit('SET_DEPARTMENT_ID', data.user.department_id)
+
+        // console.log(data);
+        setToken(data.token)
+
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  loginTemp({ commit }, userInfo) {
     // const { username, password } = userInfo;
     return new Promise((resolve, reject) => {
       const { data } = {
@@ -51,36 +77,24 @@ const actions = {
     })
   },
 
-  getInfo({ commit, state }) {
-    return new Promise((resolve, reject) => {
-      const { data } = {
-        data: {
-          roles: ['admin'],
-          introduction: 'I am a super administrator',
-          avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
-          name: 'Super Admin'
-        }
-      }
-      const { name, avatar } = data
-      commit('SET_NAME', name)
-      commit('SET_AVATAR', avatar)
-      resolve(data)
-    })
-  },
-
-  // login({ commit }, userInfo) {
-  //   const { username, password } = userInfo
+  // getInfo({ commit, state }) {
   //   return new Promise((resolve, reject) => {
-  //     login({ username: username.trim(), password: password }).then(response => {
-  //       const { data } = response
-  //       // commit('SET_TOKEN', data.token)
-  //       setToken(data.token)
-  //       resolve()
-  //     }).catch(error => {
-  //       reject(error)
-  //     })
+  //     const { data } = {
+  //       data: {
+  //         roles: ['admin'],
+  //         introduction: 'I am a super administrator',
+  //         avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
+  //         name: 'Super Admin'
+  //       }
+  //     }
+  //     const { name, avatar } = data
+  //     commit('SET_NAME', name)
+  //     commit('SET_AVATAR', avatar)
+  //     resolve(data)
   //   })
   // },
+
+
 
   // get user info
   // getInfo({ commit, state }) {
