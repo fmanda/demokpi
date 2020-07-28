@@ -24,6 +24,8 @@ $app->add(new Tuupola\Middleware\JwtAuthentication([
               $app->getBasePath() . "/check",
               $app->getBasePath() . "/login",
               $app->getBasePath() . "/kpidept_upload_ml",
+              $app->getBasePath() . "/kpidept_upload_kpi",
+              $app->getBasePath() . "/downloadfile"              
             ]
         ]),
         new Tuupola\Middleware\JwtAuthentication\RequestMethodRule([

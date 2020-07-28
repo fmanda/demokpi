@@ -3,7 +3,7 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">Please Login First</h3>
       </div>
 
       <el-form-item prop="username">
@@ -43,17 +43,18 @@
 
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
 
-      <div class="tips">
+      <!-- <div class="tips">
         <span style="margin-right:20px;">username: admin</span>
         <span> password: any</span>
-      </div>
+      </div> -->
 
     </el-form>
   </div>
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
+import { Message } from 'element-ui'
+// import { validUsername } from '@/utils/validate'
 
 export default {
   name: 'Login',
@@ -62,20 +63,20 @@ export default {
       // if (!validUsername(value)) {
       //   callback(new Error('Please enter the correct user name'))
       // } else {
-        callback()
+      callback()
       // }
     }
     const validatePassword = (rule, value, callback) => {
       // if (value.length < 6) {
       //   callback(new Error('The password can not be less than 6 digits'))
       // } else {
-        callback()
+      callback()
       // }
     }
     return {
       loginForm: {
-        username: 'admin',
-        password: 'admin'
+        username: '',
+        password: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -113,10 +114,14 @@ export default {
             this.$router.push({ path: this.redirect || '/' })
             this.loading = false
           }).catch(() => {
+            Message({
+              message: 'Gagal Login',
+              type: 'error',
+              duration: 5 * 1000
+            })
             this.loading = false
           })
         } else {
-          console.log('error submit!!')
           return false
         }
       })

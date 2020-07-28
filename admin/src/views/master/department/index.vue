@@ -16,6 +16,7 @@
             size="mini"
             placeholder="Type to search"
           />
+          <span hidden>{{ scope.row }}</span>
         </template>
         <template slot-scope="scope">
           <el-button

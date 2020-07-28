@@ -43,6 +43,13 @@ export function getFileListKPI(yearperiod, deptid, subcode, level) {
   })
 }
 
+export function deleteFile(id) {
+  return request({
+    url: 'deleteFile/' + id.toString(),
+    method: 'get'
+  })
+}
+
 export function downloadFile(id) {
   var url = process.env.VUE_APP_BASE_URL + '/downloadfile/' + id.toString();
   window.open(url, '_blank');

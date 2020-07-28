@@ -7,7 +7,7 @@ const getDefaultState = () => {
   return {
     token: getToken(),
     name: '',
-    department_id : 0,
+    department_id: 0,
     avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'
   }
 }
@@ -38,7 +38,6 @@ const actions = {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password }).then(response => {
-
         const { data } = response
         commit('SET_TOKEN', data.token)
         commit('SET_NAME', data.user.username)
@@ -93,8 +92,6 @@ const actions = {
   //     resolve(data)
   //   })
   // },
-
-
 
   // get user info
   // getInfo({ commit, state }) {

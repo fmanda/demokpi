@@ -103,6 +103,18 @@ $app->get('/filelistml/{yearperiod}/{deptid}/{subcode}/{level}', function(Reques
 	}
 });
 
+$app->get('/deleteFile/{id}', function ($request, $response) {  //if hosting not allowed del
+  try{
+    $data = ModelUploadLog::deleteFromDB($request->getAttribute('id'));
+		return $response->withHeader('Content-Type', 'application/json;charset=utf-8');
+	}catch(Exception $e){
+    $msg = $e->getMessage();
+    $response->getBody()->write($msg);
+		return $response->withStatus(500)
+			->withHeader('Content-Type', 'text/html');
+	}
+});
+
 // $app->get('/testimage', function ($request, $response) {
 //   try{
 //     $file = 'upload\2020\L3\L3_17\rainbow_six_siege_outbreak_4k_8k-wide.jpg';
