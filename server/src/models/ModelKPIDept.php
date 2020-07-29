@@ -1,25 +1,131 @@
 <?php
 	require_once '../src/models/BaseModel.php';
 	require_once '../src/models/ModelDepartment.php';
+	require_once '../src/models/ModelMLArea.php';
+	require_once '../src/models/ModelKPIArea.php';
 
 	class ModelKPIDept extends BaseModel{
+
+		public static function getTableName(){
+			return 'kpi_department';
+		}
+
 		public static function getFields(){
 			return array(
-				"dept_id", "deptcode", "deptname", "yearperiod", "transdate"
+				"department_id", "period"
 			);
 		}
 
-		public static function generate($dept_id, $yearperiod){
+		public static function retrieve($id){
+			$obj = parent::retrieve($id);
+			if (isset($obj)) {
+				$obj->mlitems = ModelMLArea::retrieveList('kpi_department_id = '. $obj->id);
+				foreach($obj->mlitems as $mlarea){
+					$mlarea->items = ModelMLSubArea::retrieveList('ml_area_id = '. $mlarea->id);
+				}
+				$obj->kpiitems = ModelKPIArea::retrieveList('kpi_department_id = '. $obj->id);
+				foreach($obj->kpiitems as $kpiarea){
+					$kpiarea->items = ModelKPISubArea::retrieveList('kpi_area_id = '. $mlarea->id);
+				}
+			}
+			return $obj;
+		}
+
+		public static function retrieveBy($dept_id, $period){
+			$row = DB::openQuery("select * from ".static::getTableName()
+				." where department_id = " . $dept_id ." and period = " . $period);
+
+			if (isset($row[0])) $obj = $row[0];
+
+			if (isset($obj)) {
+				$obj->mlitems = ModelMLArea::retrieveList('kpi_department_id = '. $obj->id);
+				foreach($obj->mlitems as $mlarea){
+					$mlarea->items = ModelMLSubArea::retrieveList('ml_area_id = '. $mlarea->id);
+				}
+				$obj->kpiitems = ModelKPIArea::retrieveList('kpi_department_id = '. $obj->id);
+				foreach($obj->kpiitems as $kpiarea){
+					$kpiarea->items = ModelKPISubArea::retrieveList('kpi_area_id = '. $mlarea->id);
+				}
+
+				return $obj;
+			}else{
+				return null;
+			}
+
+		}
+
+		public static function deleteFromDB($id){
+			try{
+				$str = static::generateSQLDelete("id=". $id);
+				$str = $str . "delete a, b from ml_area a
+							left join ml_subarea b on a.id = b.ml_area_id where a.kpi_department_id = " . $id . "; ";
+				$str = $str . "delete a, b from kpi_area a
+							left join kpi_subarea b on a.id = b.kpi_area_id where a.kpi_department_id = " . $id . "; ";
+				DB::executeSQL($str);
+			} catch (Exception $e) {
+				$db->rollback();
+				throw $e;
+			}
+		}
+
+		public static function saveToDB($obj){
+			$db = new DB();
+			$db = $db->connect();
+			$db->beginTransaction();
+			try {
+				if (!static::isNewTransaction($obj)){
+					$str = "delete a, b from ml_area a
+								left join ml_subarea b on a.id = b.ml_area_id where a.kpi_department_id = " . $obj->id . "; ";
+					$str = $str . "delete a, b from kpi_area a
+								left join kpi_subarea b on a.id = b.kpi_area_id where a.kpi_department_id = " . $obj->id . "; ";
+					$db->prepare($str)->execute();
+				}
+
+				static::saveObjToDB($obj, $db);
+
+				foreach($obj->mlitems as $mlarea){
+					$mlarea->kpi_department_id = $obj->id;
+					$mlarea->id = 0; //force insert
+					ModelMLArea::saveObjToDB($mlarea, $db);
+					foreach($mlarea->items as $mlsubarea){
+						$mlsubarea->id = 0; //force insert
+						$mlsubarea->ml_area_id = $mlarea->id;
+					  ModelMLSubArea::saveObjToDB($mlsubarea, $db);
+					}
+				}
+
+				foreach($obj->kpiitems as $kpiarea){
+					$kpiarea->kpi_department_id = $obj->id;
+					$kpiarea->id = 0; //force insert
+					ModelKPIArea::saveObjToDB($kpiarea, $db);
+					foreach($kpiarea->items as $kpisubarea){
+						$kpisubarea->id = 0; //force insert
+						$kpisubarea->kpi_area_id = $kpiarea->id;
+					  ModelKPISubArea::saveObjToDB($kpisubarea, $db);
+					}
+				}
+
+				$db->commit();
+				$db = null;
+
+			} catch (Exception $e) {
+				$db->rollback();
+				throw $e;
+			}
+		}
+
+		public static function generate($dept_id, $period){
 			$obj = new stdClass();
 			$obj->id = 0;
-			$obj->yearperiod = $yearperiod;
+			$obj->period = $period;
 
-			$dept = ModelDepartment::retrieve($dept_id);
+			$dept = static::retrieveBy($dept_id, $period);
+			$department = ModelDepartment::retrieve($dept_id);
 
 			if (isset($dept)) {
 				$obj->dept_id = $dept->id;
-				$obj->deptcode = $dept->deptcode;
-				$obj->deptname = $dept->deptname;
+				$obj->deptcode = $department->deptcode;
+				$obj->deptname = $department->deptname;
 				$obj->mlitems = array();
 				$obj->kpiitems = array();
 
@@ -34,14 +140,6 @@
 						ModelKPIDept::setObjItem($obj->kpiitems, $area, $subarea);
 					}
 				}
-			}
-			return $obj;
-		}
-
-		public static function retrieve($id){
-			$obj = parent::retrieve($id);
-			if (isset($obj)) {
-				$obj->items = ModelKPIDeptDetail::retrieveList('KPIDept_ID = '. $obj->id);
 			}
 			return $obj;
 		}
@@ -96,59 +194,7 @@
 			}
 		}
 
-		public static function deleteFromDB($id){
-			try{
-				$obj = parent::retrieve($id);
-				$str = ModelKPIDeptDetail::generateSQLDelete("KPIDept_ID=". $id);
-				DB::executeSQL($str);
-			} catch (Exception $e) {
-				$db->rollback();
-				throw $e;
-			}
-		}
-
-		public static function saveToDB($obj){
-			$db = new DB();
-			$db = $db->connect();
-			$db->beginTransaction();
-			try {
-				if (!static::isNewTransaction($obj)){
-					$str = ModelKPIDeptDetail::generateSQLDelete("KPIDept_ID=". $id);
-					$db->prepare($str)->execute();
-				}
-				static::saveObjToDB($obj, $db);
-				foreach($obj->items as $item){
-					$item->KPIDept_ID = $obj->id;
-					ModelKPIDeptDetail::saveObjToDB($item, $db);
-				}
-				$db->commit();
-				$db = null;
-			} catch (Exception $e) {
-				$db->rollback();
-				throw $e;
-			}
-		}
-	}
 
 
-	class ModelKPIDeptDetail extends BaseModel{
-		public static function getTableName(){
-			return 'kpideptdetail';
-		}
-		public static function getFields(){
-			return array(
-				"KPIDept_ID",
-				"groupCode", // ML/KPI
-				"areacode",
-				"areaname",
-				"subcode",
-				"subname", "subdesc", "weight",
-				"level_1", "leveldetail_1",
-				"level_2", "leveldetail_2",
-				"level_3", "leveldetail_3",
-				"level_4", "leveldetail_4",
-				"level_5", "leveldetail_5",
 
-			);
-		}
 	}

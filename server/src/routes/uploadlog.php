@@ -63,10 +63,10 @@ $app->get('/downloadfile/{id}', function ($request, $response) {
 });
 
 
-$app->get('/filelistkpi/{yearperiod}/{deptid}/{subcode}/{level}', function(Request $request, Response $response) {
+$app->get('/filelistkpi/{period}/{deptid}/{subcode}/{level}', function(Request $request, Response $response) {
 	try{
 		$str = 'select a.*, b.username from upload_log a left join users b on a.user_id = b.id'
-				.' where a.yearperiod = '. $request->getAttribute('yearperiod')
+				.' where a.period = '. $request->getAttribute('period')
 				.' and a.department_id = '. $request->getAttribute('deptid')
 				.' and a.kpi_subarea = '. "'" . $request->getAttribute('subcode') . "'"
 				.' and a.level_id = '. $request->getAttribute('level');
@@ -83,10 +83,10 @@ $app->get('/filelistkpi/{yearperiod}/{deptid}/{subcode}/{level}', function(Reque
 	}
 });
 
-$app->get('/filelistml/{yearperiod}/{deptid}/{subcode}/{level}', function(Request $request, Response $response) {
+$app->get('/filelistml/{period}/{deptid}/{subcode}/{level}', function(Request $request, Response $response) {
 	try{
 		$str = 'select a.*, b.username from upload_log a left join users b on a.user_id = b.id'
-				.' where a.yearperiod = '. $request->getAttribute('yearperiod')
+				.' where a.period = '. $request->getAttribute('period')
 				.' and a.department_id = '. $request->getAttribute('deptid')
 				.' and a.ml_subarea = '. "'" . $request->getAttribute('subcode') . "'"
 				.' and a.level_id = '. $request->getAttribute('level');

@@ -34,18 +34,38 @@
     </el-table>
     <br>
     <el-button type="success" icon="el-icon-plus" @click.native.prevent="handleNew()">Add Department</el-button>
+
+    <el-dialog :title="dialogData.caption" :visible.sync="dialogVisible" width="600px">
+      <el-form ref="form" :model="dialogData" label-width="120px">
+        <el-form-item label="Dept Code">
+          <el-input v-model="dialogData.deptcode" />
+        </el-form-item>
+        <el-form-item label="Dept Name">
+          <el-input v-model="dialogData.deptname" />
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click.native.prevent="saveData()">Update</el-button>
+        <el-button @click="dialogVisible = false">Cancel</el-button>
+      </span>
+    </el-dialog>
+
   </div>
 </template>
 
 <script>
-import { getListDept } from '@/api/department'
+import { getDepartment, getListDept, postDepartment } from '@/api/department'
 
 export default {
   data() {
     return {
       data: [],
       listLoading: true,
-      search: ''
+      search: '',
+      dialogData: {
+        caption: ''
+      },
+      dialogVisible: false
     }
   },
   created() {
@@ -59,12 +79,36 @@ export default {
         this.listLoading = false
       })
     },
+    showDialog(id) {
+      getDepartment(id).then(response => {
+        this.dialogData = response.data;
+        if (id === 0) {
+          this.dialogData = { caption: '' }
+        } else {
+          this.dialogData.caption = 'Edit Department';
+        }
+
+        this.dialogVisible = true;
+      })
+    },
     handleEdit(index, row) {
-      this.$router.push({ name: 'update_department', params: { id: row.id }})
-      // this.$router.push({path: '/master/update_department', params: {id: row.id} })
+      this.showDialog(row.id);
+      // this.$router.push({ name: 'update_department', params: { id: row.id }})
     },
     handleNew() {
-      this.$router.push({ path: '/master/update_department' })
+      this.showDialog(0);
+      // this.$router.push({ path: '/master/update_department' })
+    },
+    saveData() {
+      var vm = this;
+      postDepartment(this.dialogData).then(response => {
+        vm.$message({
+          type: 'success',
+          message: 'Data Berhasil Disimpan'
+        });
+        vm.dialogVisible = false;
+        vm.fetchData();
+      })
     }
   }
 }

@@ -87,6 +87,20 @@ export const constantRoutes = [
   },
 
   {
+    path: '/register',
+    // name: 'upload_p',
+    component: Layout,
+    children: [
+      {
+        path: 'register',
+        name: 'register',
+        component: () => import('@/views/register/index'),
+        meta: { title: 'Register KPI', icon: 'password' }
+      }
+    ]
+  },
+
+  {
     path: '/upload',
     // name: 'upload_p',
     component: Layout,

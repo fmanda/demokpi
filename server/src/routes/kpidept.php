@@ -12,11 +12,10 @@ require_once '../src/models/ModelUploadLog.php';
 // $container = new Container();
 // $container->set('upload_directory', __DIR__ . '/uploads');
 
-$app->get('/kpidept/{dept_id}/{year}', function ($request, $response, $args) {
+$app->get('/kpidept/{id}', function ($request, $response, $args) {
 	try{
-    $deptid = $request->getAttribute('dept_id');
-    $year = $request->getAttribute('year');
-    $data = ModelKPIDept::generate($deptid, $year);
+    $id = $request->getAttribute('id');
+    $data = ModelKPIDept::retrieve($id);
     $json = json_encode($data);
     $response->getBody()->write($json);
 		return $response->withHeader('Content-Type', 'application/json;charset=utf-8');
@@ -28,7 +27,56 @@ $app->get('/kpidept/{dept_id}/{year}', function ($request, $response, $args) {
 	}
 });
 
-$app->post('/kpidept_upload_ml/{yearperiod}/{deptid}/{subcode}/{level}', function(Request $request, Response $response) {
+$app->get('/kpidept/{dept_id}/{period}', function ($request, $response, $args) {
+	try{
+    $deptid = $request->getAttribute('dept_id');
+    $period = $request->getAttribute('period');
+    $data = ModelKPIDept::retrieveBy($deptid, $period);
+    $json = json_encode($data);
+    $response->getBody()->write($json);
+		return $response->withHeader('Content-Type', 'application/json;charset=utf-8');
+	}catch(Exception $e){
+    $msg = $e->getMessage();
+    $response->getBody()->write($msg);
+		return $response->withStatus(500)
+			->withHeader('Content-Type', 'text/html');
+	}
+});
+
+$app->post('/kpidept', function ($request, $response) {
+	$json = $request->getBody();
+	$obj = json_decode($json);
+	try{
+		ModelKPIDept::saveToDB($obj);
+    $json = json_encode($obj);
+    $response->getBody()->write($json);
+    return $response->withHeader('Content-Type', 'application/json;charset=utf-8');
+	}catch(Exception $e){
+		$msg = $e->getMessage();
+    $response->getBody()->write($msg);
+		return $response->withStatus(500)
+			->withHeader('Content-Type', 'text/html');
+	}
+
+});
+
+$app->get('/genkpidept/{dept_id}/{period}', function ($request, $response, $args) {
+	try{
+    $deptid = $request->getAttribute('dept_id');
+    $period = $request->getAttribute('period');
+    $data = ModelKPIDept::generate($deptid, $period);
+    $json = json_encode($data);
+    $response->getBody()->write($json);
+		return $response->withHeader('Content-Type', 'application/json;charset=utf-8');
+	}catch(Exception $e){
+    $msg = $e->getMessage();
+    $response->getBody()->write($msg);
+		return $response->withStatus(500)
+			->withHeader('Content-Type', 'text/html');
+	}
+});
+
+$app->post('/kpidept_upload_ml/{period}/{deptid}/{subcode}/{level}', function(Request $request, Response $response) {
 	try{
 		return executeUploadFile($request, $response, false);
 	}catch(Exception $e){
@@ -39,7 +87,7 @@ $app->post('/kpidept_upload_ml/{yearperiod}/{deptid}/{subcode}/{level}', functio
 	}
 });
 
-$app->post('/kpidept_upload_kpi/{yearperiod}/{deptid}/{subcode}/{level}', function(Request $request, Response $response) {
+$app->post('/kpidept_upload_kpi/{period}/{deptid}/{subcode}/{level}', function(Request $request, Response $response) {
 	try{
 		return executeUploadFile($request, $response, true);
 	}catch(Exception $e){
@@ -57,12 +105,12 @@ function executeUploadFile($request, $response, $isKPI){
 	$deptid = $request->getAttribute('deptid');
 	$level = $request->getAttribute('level');
 	$subcode = $request->getAttribute('subcode');
-	$yearperiod = $request->getAttribute('yearperiod');
+	$period = $request->getAttribute('period');
 
 	$dept = ModelDepartment::retrieveHeader($deptid);
 	$deptcode = $dept->deptcode;
 
-	$directory = $directory . DIRECTORY_SEPARATOR . $yearperiod
+	$directory = $directory . DIRECTORY_SEPARATOR . $period
 		. DIRECTORY_SEPARATOR . $deptcode
 		. DIRECTORY_SEPARATOR . $subcode;
 
@@ -79,7 +127,7 @@ function executeUploadFile($request, $response, $isKPI){
 			$obj->filename = $filename;
 			$obj->directory = $directory;
 			$obj->filepath = $directory . DIRECTORY_SEPARATOR . $filename;
-			$obj->yearperiod = $yearperiod;
+			$obj->period = $period;
 			if ($isKPI){
 				$obj->ml_kpiarea = $subcode;
 			}else{
@@ -103,3 +151,28 @@ function moveUploadedFile($directory, UploadedFileInterface $uploadedFile)
 	$uploadedFile->moveTo($directory . DIRECTORY_SEPARATOR . $filename);
 	return $filename;
 }
+
+
+$app->get('/period', function ($request, $response, $args) {
+	try{
+    $ar = array();
+
+		for ($i = 2020; $i <= 2030; $i++) {
+			for ($j = 1; $j <= 2; $j++) {
+				$obj = new stdClass();
+				$obj->id = $i . '0' .$j;
+				$obj->caption = $i . ' semester ' . $j;
+				array_push($ar, $obj);
+			}
+		}
+
+    $json = json_encode($ar);
+    $response->getBody()->write($json);
+		return $response->withHeader('Content-Type', 'application/json;charset=utf-8');
+	}catch(Exception $e){
+    $msg = $e->getMessage();
+    $response->getBody()->write($msg);
+		return $response->withStatus(500)
+			->withHeader('Content-Type', 'text/html');
+	}
+});

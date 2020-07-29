@@ -2,17 +2,17 @@
   <div id="container" class="app-container">
     <el-form ref="form" :model="dialogData" label-width="120px" label-position="top">
       <el-form-item label="">
-        <el-col :span="2">
-          <el-select v-model="param_year" placeholder="Select Year" style="width:100%">
+        <el-col :span="3">
+          <el-select v-model="param_period" placeholder="Select Year" style="width:100%">
             <el-option
-              v-for="year in years"
-              :key="year.id"
-              :label="year.id"
-              :value="year.id"
+              v-for="period in periods"
+              :key="period.id"
+              :label="period.caption"
+              :value="period.id"
             />
           </el-select>
         </el-col>
-        <el-col :span="22">
+        <el-col :span="21">
           <el-select v-model="param_department_id" placeholder="Select Department" style="width:100%; margin-left:10px">
             <el-option
               v-for="dept in depts"
@@ -154,9 +154,9 @@
 </template>
 
 <script>
-import { getKPIDept, getListDept } from '@/api/department'
+import { getListDept } from '@/api/department'
 import { spanRow } from '@/utils/spanRow'
-import { getUploadURLML, getUploadURLKPI, getFileListML, getFileListKPI, downloadFile, deleteFile } from '@/api/kpidept'
+import { getUploadURLML, getUploadURLKPI, getFileListML, getFileListKPI, downloadFile, deleteFile, getPeriod, genKPIDept } from '@/api/kpidept'
 import { Message } from 'element-ui'
 import { mapGetters } from 'vuex'
 
@@ -164,17 +164,17 @@ export default {
   data() {
     return {
       listLoading: null,
-      param_year: null,
+      param_period: null,
       param_department_id: null,
       param_iskpi: null,
       param_subcode: null,
       param_level: null,
-      years: [{ id: 2020 }, { id: 2021 }, { id: 2022 }, { id: 2023 }, { id: 2024 }],
       kpidept: {
         mlitems: [],
         kpiitems: []
       },
       depts: [],
+      periods: [],
       optionSpan: [
         { index: 0, field: 'areaname' },
         { index: 1, field: 'subcode' },
@@ -197,7 +197,7 @@ export default {
     ])
   },
   watch: {
-    param_year(val) {
+    param_period(val) {
       this.fetchData();
     },
     param_department_id(val) {
@@ -205,41 +205,30 @@ export default {
     }
   },
   created() {
-    this.fetchDepts();
-    // this.fetchData();
-    this.param_year = new Date().getFullYear();
-    // console.log(this.$route.params);
-    if (this.$route.params) {
-      this.param_department_id = this.$route.params.deptid;
-      this.param_year = this.$route.params.year;
-    }
+    this.initForm();
   },
   methods: {
-    fetchDepts() {
+    initForm(){
       getListDept().then(response => {
         this.depts = response.data;
-        if (this.department_id > 0) {
-          for (var i = this.depts.length - 1; i >= 0; i--) {
-            if (this.depts[i].id !== this.department_id) {
-              this.depts.splice(i, 1);
-            }
-          }
-        }
+      });
+      getPeriod().then(response => {
+        this.periods = response.data;
       })
     },
     fetchData() {
       this.listLoading = true
       var deptid = 0;
-      var year = 0;
+      var period = 0;
       if (this.param_department_id) deptid = this.param_department_id;
-      if (this.param_year) year = this.param_year;
+      if (this.param_period) period = this.param_period;
 
-      if (year === 0 || deptid === 0) {
+      if (period === 0 || deptid === 0) {
         this.listLoading = false;
         return;
       }
 
-      getKPIDept(deptid, year).then(response => {
+      genKPIDept(deptid, period).then(response => {
         this.kpidept = response.data;
 
         var lvl = '';
@@ -280,7 +269,7 @@ export default {
       this.param_iskpi = iskpi;
 
       // console.log(this.param_iskpi);
-      if (!this.param_year) return;
+      if (!this.param_period) return;
       if (!this.param_department_id) return;
       if (!this.param_subcode) return;
       if (!this.param_level) return;
@@ -294,37 +283,22 @@ export default {
       this.param_level = items[index].level;
       this.param_iskpi = iskpi;
 
-      // console.log(this.param_iskpi);
-      if (!this.param_year) return;
+      if (!this.param_period) return;
       if (!this.param_department_id) return;
       if (!this.param_subcode) return;
       if (!this.param_level) return;
-      // if (!this.param_iskpi) return;
       this.getFileList();
       this.dialogFileVisible = true;
-      // if (!this.param_year) return;
-      // if (!this.param_department_id) return;
-      // this.$router.push({
-      //   name: 'preview',
-      //   params: {
-      //     year: this.param_year,
-      //     deptid: this.param_department_id,
-      //     level: items[index].level,
-      //     iskpi: is_kpi,
-      //     subcode: items[index].subcode,
-      //     sender: 'upload'
-      //   }
-      // })
     },
     getFileList() {
       if (this.param_iskpi) {
-        getFileListKPI(this.param_year, this.param_department_id, this.param_subcode, this.param_level).then(response => {
+        getFileListKPI(this.param_period, this.param_department_id, this.param_subcode, this.param_level).then(response => {
           this.dbFileList = response.data;
         }).catch(() => {
           this.dbFileList = [];
         })
       } else {
-        getFileListML(this.param_year, this.param_department_id, this.param_subcode, this.param_level).then(response => {
+        getFileListML(this.param_period, this.param_department_id, this.param_subcode, this.param_level).then(response => {
           this.dbFileList = response.data;
         }).catch(() => {
           this.dbFileList = [];
@@ -387,9 +361,9 @@ export default {
     getRestUploadURL() {
       var url = '';
       if (this.param_iskpi) {
-        url = getUploadURLKPI(this.param_year, this.param_department_id, this.param_subcode, this.param_level);
+        url = getUploadURLKPI(this.param_period, this.param_department_id, this.param_subcode, this.param_level);
       } else {
-        url = getUploadURLML(this.param_year, this.param_department_id, this.param_subcode, this.param_level);
+        url = getUploadURLML(this.param_period, this.param_department_id, this.param_subcode, this.param_level);
       }
       return url;
     },
@@ -412,7 +386,7 @@ export default {
     },
     getTagType(sc) {
       if (sc.row.level === 1) return 'danger';
-      if (sc.row.level === 2) return 'success';
+      if (sc.row.level === 2) return 'warning';
       if (sc.row.level === 3) return 'info';
       if (sc.row.level === 4) return '';
       if (sc.row.level === 5) return 'success';

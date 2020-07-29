@@ -27,6 +27,13 @@ export function getUploadLog() {
   })
 }
 
+export function getPeriod() {
+  return request({
+    url: 'period',
+    method: 'get'
+  })
+}
+
 export function getFileListML(yearperiod, deptid, subcode, level) {
   return request({
     url: 'filelistml/' + yearperiod.toString() + '/' +
@@ -53,4 +60,27 @@ export function deleteFile(id) {
 export function downloadFile(id) {
   var url = process.env.VUE_APP_BASE_URL + '/downloadfile/' + id.toString();
   window.open(url, '_blank');
+}
+
+
+export function genKPIDept(deptid, period) {
+  return request({
+    url: 'genkpidept/' + deptid.toString() + '/' + period.toString(),
+    method: 'get'
+  })
+}
+
+export function getKPIDept(deptid, period) {
+  return request({
+    url: 'kpidept/' + deptid.toString() + '/' + period.toString(),
+    method: 'get'
+  })
+}
+
+export function postKPIDept(data) {
+  return request({
+    url: 'kpidept',
+    method: 'post',
+    data
+  })
 }

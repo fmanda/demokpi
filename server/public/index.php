@@ -13,26 +13,25 @@ $app->setBasePath('/public');
 
 $app->addErrorMiddleware(true, false, false);
 
-$app->add(new Tuupola\Middleware\JwtAuthentication([
-    // "header" => "X-Token", default Authorization
-    "regexp" => "/(.*)/", //default format Bearer <token>
-    "secret" => $config["secret"],
-    "algorithm" => ["HS256"],
-    "rules" => [
-        new Tuupola\Middleware\JwtAuthentication\RequestPathRule([
-            "ignore" => [
-              $app->getBasePath() . "/check",
-              $app->getBasePath() . "/login",
-              $app->getBasePath() . "/kpidept_upload_ml",
-              $app->getBasePath() . "/kpidept_upload_kpi",
-              $app->getBasePath() . "/downloadfile"              
-            ]
-        ]),
-        new Tuupola\Middleware\JwtAuthentication\RequestMethodRule([
-            "ignore" => ["OPTIONS"]
-        ])
-    ]
-]));
+// $app->add(new Tuupola\Middleware\JwtAuthentication([
+//     "regexp" => "/(.*)/", //default format Bearer <token>
+//     "secret" => $config["secret"],
+//     "algorithm" => ["HS256"],
+//     "rules" => [
+//         new Tuupola\Middleware\JwtAuthentication\RequestPathRule([
+//             "ignore" => [
+//               $app->getBasePath() . "/check",
+//               $app->getBasePath() . "/login",
+//               $app->getBasePath() . "/kpidept_upload_ml",
+//               $app->getBasePath() . "/kpidept_upload_kpi",
+//               $app->getBasePath() . "/downloadfile"
+//             ]
+//         ]),
+//         new Tuupola\Middleware\JwtAuthentication\RequestMethodRule([
+//             "ignore" => ["OPTIONS"]
+//         ])
+//     ]
+// ]));
 
 
 $app->options('/{routes:.+}', function ($request, $response, $args) {

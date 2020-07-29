@@ -8,7 +8,7 @@
 
 		public static function getFields(){
 			return array(
-				"department_id", "areacode", "areaname"
+				"kpi_department_id", "areacode", "areaname"
 			);
 		}
 	}
