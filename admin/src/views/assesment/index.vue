@@ -150,8 +150,7 @@
 <script>
 import { getListDept } from '@/api/department'
 import { spanRow } from '@/utils/spanRow'
-import { getUploadURLML, getUploadURLKPI, getFileListML, getFileListKPI, downloadFile, deleteFile, getPeriod, genKPIDept } from '@/api/kpidept'
-import { Message } from 'element-ui'
+import { getFileListML, getFileListKPI, downloadFile, getPeriod, genKPIDept } from '@/api/kpidept'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -202,7 +201,7 @@ export default {
     this.initForm();
   },
   methods: {
-    initForm(){
+    initForm() {
       getListDept().then(response => {
         this.depts = response.data;
       });

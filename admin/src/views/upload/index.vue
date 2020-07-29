@@ -208,9 +208,16 @@ export default {
     this.initForm();
   },
   methods: {
-    initForm(){
+    initForm() {
       getListDept().then(response => {
         this.depts = response.data;
+        if (this.department_id > 0) {
+          for (var i = this.depts.length - 1; i >= 0; i--) {
+            if (this.depts[i].id !== this.department_id) {
+               this.depts.splice(i, 1);
+             }
+          }
+        }        
       });
       getPeriod().then(response => {
         this.periods = response.data;

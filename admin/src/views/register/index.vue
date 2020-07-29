@@ -241,10 +241,6 @@ export default {
       param_department_id: null
     }
   },
-  beforeMount() {
-    this.fetchData();
-    this.initForm();
-  },
   watch: {
     param_period(val) {
       this.fetchData();
@@ -252,6 +248,10 @@ export default {
     param_department_id(val) {
       this.fetchData();
     }
+  },
+  beforeMount() {
+    this.fetchData();
+    this.initForm();
   },
   methods: {
     fetchData() {
@@ -268,7 +268,7 @@ export default {
         getKPIDept(this.param_department_id, this.param_period).then(response => {
           this.kpidept = response.data;
 
-          if (!this.kpidept){
+          if (!this.kpidept) {
             this.kpidept = {
               id: 0,
               period: this.param_period,
@@ -281,7 +281,7 @@ export default {
         })
       }
     },
-    initForm(){
+    initForm() {
       getListDept().then(response => {
         this.depts = response.data;
       });

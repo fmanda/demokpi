@@ -62,7 +62,6 @@ export function downloadFile(id) {
   window.open(url, '_blank');
 }
 
-
 export function genKPIDept(deptid, period) {
   return request({
     url: 'genkpidept/' + deptid.toString() + '/' + period.toString(),
