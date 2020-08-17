@@ -176,3 +176,19 @@ $app->get('/period', function ($request, $response, $args) {
 			->withHeader('Content-Type', 'text/html');
 	}
 });
+
+$app->get('/kpideptprev/{dept_id}/{period}', function ($request, $response, $args) {
+	try{
+    $deptid = $request->getAttribute('dept_id');
+    $period = $request->getAttribute('period');
+    $data = ModelKPIDept::retrievePrev($deptid, $period);
+    $json = json_encode($data);
+    $response->getBody()->write($json);
+		return $response->withHeader('Content-Type', 'application/json;charset=utf-8');
+	}catch(Exception $e){
+    $msg = $e->getMessage();
+    $response->getBody()->write($msg);
+		return $response->withStatus(500)
+			->withHeader('Content-Type', 'text/html');
+	}
+});

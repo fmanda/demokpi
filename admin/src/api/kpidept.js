@@ -76,6 +76,13 @@ export function getKPIDept(deptid, period) {
   })
 }
 
+export function getKPIDeptPrev(deptid, period) {
+  return request({
+    url: 'kpideptprev/' + deptid.toString() + '/' + period.toString(),
+    method: 'get'
+  })
+}
+
 export function postKPIDept(data) {
   return request({
     url: 'kpidept',

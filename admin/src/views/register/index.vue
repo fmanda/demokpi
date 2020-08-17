@@ -31,7 +31,7 @@
           <el-button type="primary" style="width: 100%;" icon="el-icon-success" @click.native.prevent="saveData()">Register</el-button>
         </el-col>
         <el-col :span="3" style="margin-left: 10px;">
-          <el-button type="success" style="width: 100%;" icon="el-icon-delete" @click.native.prevent="back()">Copy From Previous</el-button>
+          <el-button type="success" style="width: 100%;" icon="el-icon-delete" @click.native.prevent="copyFromPrev()">Copy From Previous</el-button>
         </el-col>
       </el-form-item>
     </el-form>
@@ -221,7 +221,7 @@
 <script>
 // import { test } from '@/api/test'
 import { getListDept } from '@/api/department'
-import { getPeriod, getKPIDept, postKPIDept } from '@/api/kpidept'
+import { getPeriod, getKPIDept, postKPIDept, getKPIDeptPrev } from '@/api/kpidept'
 
 export default {
   data() {
@@ -266,6 +266,33 @@ export default {
         }
       } else {
         getKPIDept(this.param_department_id, this.param_period).then(response => {
+          this.kpidept = response.data;
+
+          if (!this.kpidept) {
+            this.kpidept = {
+              id: 0,
+              period: this.param_period,
+              department_id: this.param_department_id,
+              mlitems: [],
+              kpiitems: []
+            }
+          }
+          this.loading = false
+        })
+      }
+    },
+    copyFromPrev(){
+      this.listLoading = true;
+      if (!this.param_department_id || this.param_department_id === 0 || !this.param_period) {
+        this.kpidept = {
+          id: 0,
+          period: this.param_period,
+          department_id: 0,
+          mlitems: [],
+          kpiitems: []
+        }
+      } else {
+        getKPIDeptPrev(this.param_department_id, this.param_period).then(response => {
           this.kpidept = response.data;
 
           if (!this.kpidept) {

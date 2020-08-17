@@ -25,7 +25,7 @@
 				}
 				$obj->kpiitems = ModelKPIArea::retrieveList('kpi_department_id = '. $obj->id);
 				foreach($obj->kpiitems as $kpiarea){
-					$kpiarea->items = ModelKPISubArea::retrieveList('kpi_area_id = '. $mlarea->id);
+					$kpiarea->items = ModelKPISubArea::retrieveList('kpi_area_id = '. $kpiarea->id);
 				}
 			}
 			return $obj;
@@ -44,7 +44,7 @@
 				}
 				$obj->kpiitems = ModelKPIArea::retrieveList('kpi_department_id = '. $obj->id);
 				foreach($obj->kpiitems as $kpiarea){
-					$kpiarea->items = ModelKPISubArea::retrieveList('kpi_area_id = '. $mlarea->id);
+					$kpiarea->items = ModelKPISubArea::retrieveList('kpi_area_id = '. $kpiarea->id);
 				}
 
 				return $obj;
@@ -194,6 +194,34 @@
 			}
 		}
 
+
+		public static function retrievePrev($dept_id, $period){
+			$currentperiod = $period;
+			$obj = static::retrieveBy($dept_id, $period);
+			if (isset($obj)) {
+				$currentid = $obj->id;
+			}else{
+				$currentid = 0;
+			}
+
+			$period = $period - 1;
+			if (substr($period, -1) == 0) {
+				$period =  ( substr($period,0,4)-1 ) . '02';
+			}
+
+
+			$obj = static::retrieveBy($dept_id, $period);
+
+			if (isset($obj)) {
+				$obj->id = $currentid;
+				$obj->period = $currentperiod;
+
+				return $obj;
+			}else{
+				return null;
+			}
+
+		}
 
 
 
