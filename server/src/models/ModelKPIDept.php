@@ -146,7 +146,7 @@
 
 		private static function setObjItem(&$items, $area, $subarea){
 			for ($i = 1; $i <= 5; $i++) {
-				if ($i == 2 && $subarea->level_2 == '') continue ;
+				if ($i == 2 && $subarea->level_2 == '') continue;
 				if ($i == 3 && $subarea->level_3 == '') continue;
 				if ($i == 4 && $subarea->level_4 == '') continue;
 				if ($i == 5 && $subarea->level_5 == '') continue;
