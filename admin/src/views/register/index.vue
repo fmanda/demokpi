@@ -344,9 +344,10 @@ export default {
       items.splice(index, 1)
     },
     addRow(items) {
-      items.push({ areacode: '', areaname: '' })
+      items.push({ areacode: '', areaname: '', items: [] })
     },
     addSubRow(items) {
+      // console.log(items);
       items.push({ subcode: '', subname: '' })
     },
     moveRow(index, items, inc) {
