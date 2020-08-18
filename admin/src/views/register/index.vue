@@ -317,6 +317,7 @@ export default {
       })
     },
     back() {
+      // fetchData()
       // this.$router.push({ path: '/master/department' })
     },
     saveData() {
@@ -337,7 +338,7 @@ export default {
           type: 'success',
           message: 'Data Berhasil Disimpan'
         });
-        vm.back();
+        vm.kpidept = response.data;
       })
     },
     deleteRow(index, items) {
