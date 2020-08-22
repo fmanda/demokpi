@@ -57,7 +57,7 @@
                   <el-table-column prop="weight" label="Bobot" width="160">
                     <template slot-scope="sc">
                       <!-- <el-input type="number" step="0.01" v-model="sc.row.weight" placeholder="Weight" /> -->
-                      <el-input-number v-model="sc.row.weight" :precision="2" :step="0.1" :max="10" />
+                      <el-input-number v-model="sc.row.weight" :precision="3" :step="0.1" :max="10" />
                     </template>
                   </el-table-column>
                   <el-table-column label="Operations">
@@ -116,7 +116,7 @@
                   <el-table-column prop="weight" label="Bobot" width="160">
                     <template slot-scope="sc">
                       <!-- <el-input type="number" step="0.01" v-model="sc.row.weight" placeholder="Weight" /> -->
-                      <el-input-number v-model="sc.row.weight" :precision="2" :step="0.1" :max="10" />
+                      <el-input-number v-model="sc.row.weight" :precision="3" :step="0.1" :max="10" />
                     </template>
                   </el-table-column>
                   <el-table-column label="Operations">
@@ -315,6 +315,12 @@ export default {
       getPeriod().then(response => {
         this.periods = response.data;
       })
+
+      //default periods
+      var today = new Date();
+      var smst = Math.floor((today.getMonth() + 5) / 6);
+
+      this.param_period = today.getFullYear().toString() +  ('0' + smst.toString()).substring(0,2);
     },
     back() {
       // fetchData()

@@ -217,11 +217,15 @@ export default {
                this.depts.splice(i, 1);
              }
           }
-        }        
+        }
       });
       getPeriod().then(response => {
         this.periods = response.data;
       })
+
+      var today = new Date();
+      var smst = Math.floor((today.getMonth() + 5) / 6);
+      this.param_period = today.getFullYear().toString() +  ('0' + smst.toString()).substring(0,2);
     },
     fetchData() {
       this.listLoading = true
